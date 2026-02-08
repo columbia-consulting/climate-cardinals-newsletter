@@ -64,10 +64,15 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
         report_url = f"{base_url}/{report_filename}"
         print(f"📡 Report URLs will use: {report_url}")
     else:
-        # Use local file:// URL (local testing only)
-        report_url = f"file:///{str(report_path).replace(chr(92), '/')}"  # Replace backslashes
-        print(f"⚠️  Warning: Using local file:// URLs - users won't be able to access links!")
-        print(f"   Set WEB_REPORT_BASE_URL to your hosted URL before sending to users.")
+        # FALLBACK: Use GitHub raw link as temporary solution
+        # Note: This will 404 until files are committed to GitHub, but at least buttons are clickable
+        report_url = f"https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/weekly_data/{report_filename}"
+        print(f"⚠️  WEB_REPORT_BASE_URL not set!")
+        print(f"   Using temporary GitHub raw URL: {report_url}")
+        print(f"   These links will work after you:")
+        print(f"   1. Push to GitHub")
+        print(f"   2. Replace YOUR_USERNAME/YOUR_REPO with your actual repo")
+        print(f"   OR setup Netlify and add WEB_REPORT_BASE_URL to .env")
     
     # Replace all URL placeholders with the actual report URL
     html = html.replace("FULL_REPORT_URL", report_url)
