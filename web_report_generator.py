@@ -26,235 +26,314 @@ def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_d
     # Start building the HTML
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Climate Cardinals - Complete Weekly Intelligence Report</title>
     <style>
+        @import url('https://fonts.cdnfonts.com/css/fk-screamer');
+        @import url('https://fonts.cdnfonts.com/css/athletics');
+
         body {{
-            font-family: Georgia, serif;
-            background-color: #faf8f5;
+            font-family: 'Athletics', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f0f0;
             margin: 0;
             padding: 20px;
             line-height: 1.6;
-            color: #0a2f1f;
+            color: #192928;
         }}
+
         .container {{
             max-width: 1000px;
             margin: 0 auto;
             background: #ffffff;
-            border-top: 6px solid #0a2f1f;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }}
+
         .header {{
-            padding: 40px 40px;
-            background: #ffffff;
-            border-bottom: 1px solid #e8ece9;
+            padding: 50px 40px;
+            background: linear-gradient(135deg, #3154ff 0%, #253292 100%);
+            color: #ffffff;
         }}
+
         .stats-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
+            gap: 0;
+            margin: 0;
+            background: #ff082c;
         }}
+
         .stat-card {{
             text-align: center;
-            padding: 25px;
-            background: linear-gradient(135deg, #f5f7f5 0%, #e8ece9 100%);
-            border-radius: 12px;
-            border: 1px solid #9caf88;
+            padding: 40px 25px;
+            background: #ff082c;
+            border-right: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
         }}
+
+        .stat-card:last-child {{
+            border-right: none;
+        }}
+
+        .stat-card:hover {{
+            background: #f95208;
+            transform: scale(1.05);
+        }}
+
         .stat-number {{
-            font-size: 36px;
-            font-weight: bold;
-            color: #0a2f1f;
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 48px;
+            font-weight: 900;
+            color: #ffffff;
             margin-bottom: 10px;
+            line-height: 1;
         }}
+
         .stat-label {{
-            font-size: 14px;
-            color: #1a5538;
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 12px;
+            color: #ffffff;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
+            letter-spacing: 2px;
+            font-weight: 700;
         }}
+
         .section {{
-            padding: 40px;
-            border-bottom: 1px solid #e8ece9;
+            padding: 50px 40px;
+            border-bottom: 1px solid #e0e0e0;
         }}
+
         .section-header {{
             margin-bottom: 30px;
         }}
+
         .section-title {{
-            font-size: 32px;
-            font-weight: bold;
-            color: #0a2f1f;
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 36px;
+            font-weight: 900;
+            color: #192928;
             margin: 0 0 10px 0;
             display: flex;
             align-items: center;
             gap: 15px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
         }}
+
         .section-subtitle {{
-            font-size: 16px;
-            color: #1a5538;
+            font-family: 'Athletics', Arial, sans-serif;
+            font-size: 15px;
+            color: #666666;
             margin: 0;
+            font-weight: 600;
         }}
+
         .item-card {{
             background: #ffffff;
-            border: 1px solid #e8ece9;
-            border-left: 4px solid #0a2f1f;
+            border: 2px solid #e0e0e0;
+            border-left: 5px solid #ff082c;
             padding: 25px;
             margin-bottom: 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             transition: all 0.3s ease;
         }}
+
         .item-card:hover {{
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            border-left-color: #3154ff;
         }}
+
         .item-title {{
+            font-family: 'FK Screamer', Arial, sans-serif;
             font-size: 20px;
-            font-weight: bold;
-            color: #0a2f1f;
+            font-weight: 900;
+            color: #192928;
             margin: 0 0 15px 0;
             line-height: 1.3;
         }}
+
         .item-meta {{
             display: flex;
             gap: 20px;
             margin-bottom: 15px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #e8ece9;
+            border-bottom: 2px solid #f0f0f0;
             flex-wrap: wrap;
         }}
+
         .meta-item {{
             font-size: 13px;
-            color: #8b7355;
-            font-weight: 500;
+            color: #3154ff;
+            font-weight: 600;
         }}
+
         .item-description {{
+            font-family: 'Athletics', Arial, sans-serif;
             font-size: 15px;
-            color: #1a5538;
+            color: #192928;
             line-height: 1.6;
             margin-bottom: 20px;
+            opacity: 0.9;
         }}
+
         .item-link {{
             display: inline-block;
-            background: #0a2f1f;
+            background: #ff082c;
             color: #ffffff;
             text-decoration: none;
             font-size: 14px;
-            font-weight: 600;
-            padding: 12px 25px;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
+            font-weight: 700;
+            padding: 14px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }}
+
         .item-link:hover {{
-            background: #1a5538;
+            background: #3154ff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(49, 84, 255, 0.4);
         }}
+
         .expert-card {{
-            background: #f5f7f5;
-            border: 1px solid #9caf88;
-            border-left: 4px solid #9caf88;
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-left: 5px solid #3154ff;
             padding: 25px;
             margin-bottom: 20px;
-            border-radius: 8px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
         }}
+
+        .expert-card:hover {{
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            border-left-color: #ff082c;
+        }}
+
         .expert-name {{
-            font-size: 20px;
-            font-weight: bold;
-            color: #0a2f1f;
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 22px;
+            font-weight: 900;
+            color: #192928;
             margin: 0 0 10px 0;
         }}
+
         .expert-role {{
-            font-size: 16px;
-            color: #1a5538;
-            font-weight: 500;
+            font-family: 'Athletics', Arial, sans-serif;
+            font-size: 15px;
+            color: #666666;
+            font-weight: 600;
             margin-bottom: 15px;
         }}
+
         .linkedin-btn {{
             display: inline-block;
-            background: #0077b5;
+            background: #3154ff;
             color: #ffffff;
             text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }}
+
         .linkedin-btn:hover {{
-            background: #005885;
+            background: #ff082c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 8, 44, 0.4);
         }}
+
         .no-data {{
             text-align: center;
             padding: 60px 20px;
-            background: #f5f7f5;
-            border: 2px dashed #9caf88;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f5fe 100%);
+            border: 2px dashed #9fdfff;
             border-radius: 12px;
-            color: #8b7355;
+            color: #192928;
+            opacity: 0.7;
         }}
+
         .footer {{
-            padding: 40px;
-            background: linear-gradient(135deg, #0a2f1f 0%, #1a5538 100%);
+            padding: 60px 40px;
+            background: #000000;
             color: #ffffff;
             text-align: center;
         }}
+
         .back-to-top {{
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: #0a2f1f;
+            background: #ff082c;
             color: #ffffff;
             border: none;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 20px;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(255, 8, 44, 0.5);
             transition: all 0.3s ease;
+            font-weight: bold;
         }}
+
         .back-to-top:hover {{
-            background: #1a5538;
-            transform: translateY(-2px);
+            background: #3154ff;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 25px rgba(49, 84, 255, 0.5);
         }}
+
         .toggle-btn {{
             display: block;
             margin: 40px auto 0;
-            background: linear-gradient(135deg, #0a2f1f 0%, #1a5538 100%);
+            background: linear-gradient(135deg, #3154ff 0%, #253292 100%);
             color: #ffffff;
             border: none;
-            font-family: inherit;
+            font-family: 'FK Screamer', Arial, sans-serif;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 900;
             padding: 16px 40px;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(10, 47, 31, 0.3);
+            box-shadow: 0 4px 15px rgba(49, 84, 255, 0.3);
         }}
+
         .toggle-btn:hover {{
-            background: linear-gradient(135deg, #1a5538 0%, #2d7a50 100%);
+            background: linear-gradient(135deg, #ff082c 0%, #f95208 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(10, 47, 31, 0.4);
+            box-shadow: 0 6px 20px rgba(255, 8, 44, 0.4);
         }}
+
         .toggle-btn:active {{
             transform: translateY(0);
         }}
+
         .item-hidden {{
             display: none;
         }}
+
         /* Print styles - show all content when printing */
         @media print {{
             .item-hidden {{
                 display: block !important;
             }}
+
             .toggle-btn,
             .back-to-top {{
                 display: none !important;
             }}
+
             .item-card,
             .expert-card {{
                 page-break-inside: avoid;
@@ -262,18 +341,31 @@ def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_d
         }}
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div style="font-size: 11px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: #1a5538; margin-bottom: 16px;">Complete Weekly Intelligence • Issue #{week_num}</div>
-            <h1 style="font-size: 48px; font-weight: bold; color: #0a2f1f; margin: 0 0 12px 0; line-height: 1.1;">🌍 Climate Cardinals</h1>
-            <p style="font-size: 18px; color: #1a5538; margin: 0 0 20px 0; font-style: italic;">Complete Weekly Intelligence Report</p>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid #e8ece9;">
-                <div style="font-size: 14px; font-weight: 500; color: #8b7355;">📅 {date_str}</div>
-                <div style="font-size: 13px; color: #1a5538; font-weight: 600;">Complete Dataset</div>
+            <div
+                style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 11px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; margin-bottom: 20px; opacity: 0.9;">
+                Complete Weekly Intelligence • Issue #{week_num}</div>
+            <h1
+                style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 56px; font-weight: 900; color: #ffffff; margin: 0 0 15px 0; line-height: 1; letter-spacing: -2px;">
+                🌍 CLIMATE CARDINALS</h1>
+            <p
+                style="font-family: 'Athletics', Arial, sans-serif; font-size: 20px; color: #ffffff; margin: 0 0 30px 0; opacity: 0.95; font-weight: 600;">
+                Complete
+                Weekly Intelligence Report</p>
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; padding-top: 20px; padding-bottom: 10px; border-top: 2px solid rgba(255,255,255,0.3);">
+                <div
+                    style="font-family: 'Athletics', Arial, sans-serif; font-size: 15px; font-weight: 700; color: #ffffff; opacity: 0.95;">
+                    📅 {date_str}</div>
+                <div
+                    style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 11px; color: #ffffff; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9;">
+                    Complete Dataset</div>
             </div>
-            
+
             <!-- Stats Overview -->
             <div class="stats-grid">
                 <div class="stat-card">
@@ -445,11 +537,16 @@ def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_d
     # Footer
     html_content += f"""
         <div class="footer">
-            <div style="font-size: 36px; margin-bottom: 16px;">🌍</div>
-            <h3 style="font-size: 24px; font-weight: bold; margin: 0 0 8px 0;">Climate Cardinals</h3>
-            <p style="font-size: 14px; opacity: 0.9; margin: 0 0 16px 0;">Complete Weekly Intelligence Report</p>
-            <div style="width: 50px; height: 2px; background: #d4a574; margin: 16px auto;"></div>
-            <p style="font-size: 11px; opacity: 0.7; margin: 12px 0 0 0;">© 2026 Climate Cardinals • Generated on {date_str}</p>
+            <div style="font-size: 48px; margin-bottom: 20px;">🌍</div>
+            <h3
+                style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 28px; font-weight: 900; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px;">
+                CLIMATE CARDINALS</h3>
+            <p
+                style="font-family: 'Athletics', Arial, sans-serif; font-size: 15px; opacity: 0.9; margin: 0 0 20px 0; font-weight: 600;">
+                Complete Weekly Intelligence Report</p>
+            <div style="width: 60px; height: 3px; background: #ffffff; margin: 20px auto;"></div>
+            <p style="font-family: 'Athletics', Arial, sans-serif; font-size: 12px; opacity: 0.7; margin: 12px 0 0 0;">©
+                2026 Climate Cardinals • Generated on {date_str}</p>
         </div>
     </div>
     
