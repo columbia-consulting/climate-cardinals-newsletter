@@ -6,9 +6,45 @@ Creates a standalone HTML page with all data when users want to see everything
 import pandas as pd
 from pathlib import Path
 from datetime import datetime
+from dateutil import parser
 import json
 import glob
 import re
+
+def calculate_event_countdown(date_str):
+    """Convert a date string into a countdown format like 'In 4 weeks'"""
+    if not date_str or date_str == "—":
+        return None
+    
+    if "rolling" in date_str.lower() or "ongoing" in date_str.lower():
+        return "Ongoing"
+    
+    try:
+        # Parse the date
+        event_date = parser.parse(date_str, fuzzy=True)
+        today = datetime.now()
+        
+        # Calculate difference
+        days_until = (event_date - today).days
+        
+        if days_until < 0:
+            return None  # Don't show past events
+        elif days_until == 0:
+            return "Today"
+        elif days_until == 1:
+            return "Tomorrow"
+        elif days_until < 7:
+            return f"In {days_until} days"
+        elif days_until < 30:
+            weeks = days_until // 7
+            return f"In {weeks} week{'s' if weeks > 1 else ''}"
+        elif days_until < 365:
+            months = days_until // 30
+            return f"In {months} month{'s' if months > 1 else ''}"
+        else:
+            return date_str  # Far future, just show the date
+    except:
+        return date_str  # If parsing fails, return original date
 
 def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_dir="weekly_data"):
     """Generate a complete HTML report with all data"""
@@ -71,6 +107,9 @@ def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_d
             background: #ff082c;
             border-right: 2px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
         }}
 
         .stat-card:last-child {{
@@ -368,22 +407,22 @@ def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_d
 
             <!-- Stats Overview -->
             <div class="stats-grid">
-                <div class="stat-card">
+                <a href="#experts" class="stat-card">
                     <div class="stat-number">{experts_count}</div>
                     <div class="stat-label">Climate Experts</div>
-                </div>
-                <div class="stat-card">
+                </a>
+                <a href="#grants" class="stat-card">
                     <div class="stat-number">{grants_count}</div>
                     <div class="stat-label">Grant Opportunities</div>
-                </div>
-                <div class="stat-card">
+                </a>
+                <a href="#events" class="stat-card">
                     <div class="stat-number">{events_count}</div>
                     <div class="stat-label">Upcoming Events</div>
-                </div>
-                <div class="stat-card">
+                </a>
+                <a href="#reports" class="stat-card">
                     <div class="stat-number">{csr_count}</div>
                     <div class="stat-label">ESG Reports</div>
-                </div>
+                </a>
             </div>
         </div>
 """
@@ -431,23 +470,43 @@ def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_d
             title = row.get('Title', 'Untitled')
             domain = row.get('Domain', row.get('Organization', ''))
             date_info = row.get('Date Info', '')
+            deadline = row.get('Deadline', '')
             url = row.get('URL', '')
             description = row.get('Description', '')
             
             meta_items = []
-            if date_info and date_info != '—':
-                meta_items.append(f'<span class="meta-item">📅 {date_info}</span>')
+            has_deadline = False
+            
+            # Show deadline countdown prominently if available
+            if deadline and deadline != '—':
+                has_deadline = True
+                if deadline != date_info:
+                    # Show the human-readable countdown with highlighted styling
+                    meta_items.append(f'<span class="meta-item" style="background: #ffe8ec; padding: 6px 12px; border-radius: 6px; color: #ff082c; font-weight: 700;">⏰ {deadline}</span>')
+                elif date_info and date_info != '—':
+                    # Show raw date if that's all we have
+                    meta_items.append(f'<span class="meta-item" style="background: #ffe8ec; padding: 6px 12px; border-radius: 6px; color: #ff082c; font-weight: 700;">📅 {date_info}</span>')
+            elif date_info and date_info != '—':
+                has_deadline = True
+                # Show raw date if no deadline countdown
+                meta_items.append(f'<span class="meta-item" style="background: #ffe8ec; padding: 6px 12px; border-radius: 6px; color: #ff082c; font-weight: 700;">📅 {date_info}</span>')
+            
             if domain and domain != '—':
                 meta_items.append(f'<span class="meta-item">🌐 {domain}</span>')
             
             meta_html = '<div class="item-meta">' + ''.join(meta_items) + '</div>' if meta_items else ''
-            link_html = f'<a href="{url}" class="item-link">Read Full Article →</a>' if url and url != '—' else ''
+            
+            # Add deadline note if not available
+            deadline_note = '' if has_deadline else '<div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>'
+            
+            link_html = f'<a href="{url}" class="item-link">View Grant Details →</a>' if url and url != '—' else ''
             
             html_content += f"""
             <div class="item-card">
                 <div class="item-title">{title}</div>
                 {meta_html}
                 <div class="item-description">{description}</div>
+                {deadline_note}
                 {link_html}
             </div>
 """
@@ -474,8 +533,17 @@ def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_d
             description = row.get('Description', '')
             
             meta_items = []
+            
+            # Show event countdown prominently if available
             if date_info and date_info != '—':
-                meta_items.append(f'<span class="meta-item">📅 {date_info}</span>')
+                countdown = calculate_event_countdown(date_info)
+                if countdown:
+                    # Show countdown with highlighted styling
+                    meta_items.append(f'<span class="meta-item" style="background: #e8f4ff; padding: 6px 12px; border-radius: 6px; color: #0066cc; font-weight: 700;">📅 {countdown}</span>')
+                    # Also show the actual date if countdown is relative
+                    if countdown not in [date_info, "Ongoing", "Today", "Tomorrow"] and "In " in countdown:
+                        meta_items.append(f'<span class="meta-item">🗓️ {date_info}</span>')
+            
             if domain and domain != '—':
                 meta_items.append(f'<span class="meta-item">🌐 {domain}</span>')
             

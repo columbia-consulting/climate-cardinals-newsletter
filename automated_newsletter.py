@@ -29,7 +29,7 @@ from email.mime.multipart import MIMEMultipart
 POLITE_DELAY = 0.25
 MAX_RESULTS_PER_KEYWORD = 4
 MAX_ROWS_PER_SECTION = 40
-MIN_YEAR = 2025
+MIN_YEAR = 2026  # Current year - update annually
 OUTPUT_FOLDER = Path("weekly_data")
 OUTPUT_FOLDER.mkdir(exist_ok=True)
 TODAY = datetime.now().date()
@@ -65,8 +65,8 @@ GRANT_KEYWORDS = [
 ]
 
 EVENT_KEYWORDS = [
-    "climate conference", "sustainability summit", "climate week",
-    "resilience symposium", "environmental conference"
+    "climate conference 2026", "sustainability summit 2026", "climate week 2026",
+    "resilience symposium 2026", "environmental conference 2026 2027"
 ]
 
 CSR_KEYWORDS = [
@@ -88,6 +88,21 @@ CLIMATE_TERMS = [
 
 def looks_relevant(title, snippet, url):
     blob = f"{title} {snippet} {url}".lower()
+    
+    # Filter out Wikipedia, books, and other irrelevant content
+    exclude_patterns = [
+        "wikipedia.org",
+        "grokipedia.com",
+        "(book)",
+        "book review",
+        "amazon.com",
+        "goodreads.com",
+        "isbn"
+    ]
+    
+    if any(pattern in blob for pattern in exclude_patterns):
+        return False
+    
     return any(t in blob for t in CLIMATE_TERMS)
 
 # ---------------------- UTILS ----------------------
@@ -109,17 +124,103 @@ def extract_year(text):
 def extract_date_snippet(text, future=True):
     if not text:
         return "—"
-    month_pat = re.compile(
-        r"(January|February|March|April|May|June|July|August|September|October|November|December)"
-        r"\s+\d{1,2},?\s*(20\d{2})", re.I
+    
+    # Enhanced pattern to catch various date formats
+    # Format 1: "January 15, 2026" or "Jan 15, 2026"
+    month_full_pat = re.compile(
+        r"(January|February|March|April|May|June|July|August|September|October|November|December|"
+        r"Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)"
+        r"\.?\s+\d{1,2},?\s*(20\d{2})", re.I
     )
-    for m in month_pat.finditer(text):
-        year = int(m.group(2))
-        if year >= MIN_YEAR:
-            return m.group(0)
-    if future and re.search(r"rolling|ongoing|open until", text, re.I):
+    
+    # Format 2: "15 January 2026" or "15 Jan 2026"
+    day_month_pat = re.compile(
+        r"\d{1,2}\s+(January|February|March|April|May|June|July|August|September|October|November|December|"
+        r"Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)"
+        r"\.?\s*(20\d{2})", re.I
+    )
+    
+    # Format 3: "2026-01-15" or "01/15/2026" or "15-01-2026"
+    numeric_pat = re.compile(r"(20\d{2})[/-](0?\d|1[0-2])[/-](0?\d|[12]\d|3[01])|"
+                            r"(0?\d|1[0-2])[/-](0?\d|[12]\d|3[01])[/-](20\d{2})|"
+                            r"(0?\d|[12]\d|3[01])[/-](0?\d|1[0-2])[/-](20\d{2})")
+    
+    # Look for deadline keywords followed by dates
+    deadline_patterns = [
+        r"(?:deadline|due|submit\s+by|applications?\s+(?:due|close)|closes?|ends?)[:\s]+(.*?)(?:\.|,|$)",
+        r"(?:apply\s+by|applications?\s+accepted\s+until)[:\s]+(.*?)(?:\.|,|$)",
+        r"(?:open\s+until|accepting\s+until)[:\s]+(.*?)(?:\.|,|$)"
+    ]
+    
+    for pat in deadline_patterns:
+        match = re.search(pat, text, re.I)
+        if match:
+            date_text = match.group(1)
+            # Try to extract date from this snippet
+            date_match = month_full_pat.search(date_text) or day_month_pat.search(date_text) or numeric_pat.search(date_text)
+            if date_match:
+                year_str = date_match.group(2) if len(date_match.groups()) >= 2 else date_match.group(0)[-4:]
+                try:
+                    year = int(re.search(r'20\d{2}', year_str).group())
+                    if year >= MIN_YEAR:
+                        return date_match.group(0)
+                except:
+                    pass
+    
+    # Standard date search
+    for m in month_full_pat.finditer(text):
+        year_match = re.search(r'20\d{2}', m.group(0))
+        if year_match:
+            year = int(year_match.group())
+            if year >= MIN_YEAR:
+                return m.group(0)
+    
+    for m in day_month_pat.finditer(text):
+        year_match = re.search(r'20\d{2}', m.group(0))
+        if year_match:
+            year = int(year_match.group())
+            if year >= MIN_YEAR:
+                return m.group(0)
+    
+    if future and re.search(r"rolling|ongoing|open\s+until|continuous", text, re.I):
         return "Rolling / Ongoing"
+    
     return "—"
+
+def calculate_deadline_text(date_str):
+    """Convert a date string into a countdown format like 'Due in 4 weeks'"""
+    if not date_str or date_str == "—":
+        return "—"
+    
+    if "rolling" in date_str.lower() or "ongoing" in date_str.lower():
+        return "Rolling deadline"
+    
+    try:
+        # Parse the date
+        deadline_date = parser.parse(date_str, fuzzy=True)
+        today = datetime.now()
+        
+        # Calculate difference
+        days_until = (deadline_date - today).days
+        
+        if days_until < 0:
+            return "Deadline passed"
+        elif days_until == 0:
+            return "Due today"
+        elif days_until == 1:
+            return "Due tomorrow"
+        elif days_until < 7:
+            return f"Due in {days_until} days"
+        elif days_until < 30:
+            weeks = days_until // 7
+            return f"Due in {weeks} week{'s' if weeks > 1 else ''}"
+        elif days_until < 365:
+            months = days_until // 30
+            return f"Due in {months} month{'s' if months > 1 else ''}"
+        else:
+            return date_str  # Far future, just show the date
+    except:
+        return date_str  # If parsing fails, return original date
 
 # ---------------------- SEARCH ----------------------
 def web_search(query, num=8):
@@ -157,15 +258,39 @@ def run_section(keywords, future=True):
             snippet = clean_text(item["snippet"])
             if not looks_relevant(title, snippet, url):
                 continue
+            
             date_info = extract_date_snippet(f"{title} {snippet}", future=future)
-            year = extract_year(date_info)
-            if year and year < MIN_YEAR:
-                continue
+            
+            # For future events/grants, filter smartly
+            if future:
+                year = extract_year(date_info)
+                
+                # REJECT: Explicitly old events (with confirmed past dates)
+                if year and year < MIN_YEAR:
+                    continue
+                
+                # REJECT: Events with past dates we can parse
+                if date_info != "—" and date_info != "Rolling / Ongoing":
+                    try:
+                        event_date = parser.parse(date_info, fuzzy=True)
+                        if event_date.date() < TODAY:
+                            continue  # Skip past events
+                    except:
+                        pass  # If parsing fails, include it
+                
+                # ACCEPT: Items with no date (most upcoming events don't have dates in snippets)
+                # ACCEPT: Rolling/Ongoing items
+                # ACCEPT: Items with future dates
+            
+            # Add deadline countdown for grants
+            deadline_text = calculate_deadline_text(date_info) if future else date_info
+            
             rows.append({
                 "Title": title,
                 "Organization": domain,
                 "Description": snippet,
                 "Date Info": date_info,
+                "Deadline": deadline_text,
                 "URL": url
             })
         time.sleep(POLITE_DELAY + random.uniform(0, 0.15))
@@ -190,13 +315,31 @@ def run_experts(queries):
             seen_profiles.add(url)
             title = clean_text(item["title"])
             snippet = clean_text(item["snippet"])
-            name = title.split("–")[0].split("-")[0].strip()
+            
+            # Parse name and role - split only on the FIRST dash/em-dash separator
+            # This preserves hyphens within job titles (e.g., "C-Suite Executive")
+            name = "—"
+            role = "—"
+            
+            if "–" in title:  # Em-dash separator
+                parts = title.split("–", 1)  # Split only once
+                name = parts[0].strip()
+                role = parts[1].strip() if len(parts) > 1 else "—"
+            elif " - " in title:  # Regular dash with spaces
+                parts = title.split(" - ", 1)  # Split only once
+                name = parts[0].strip()
+                role = parts[1].strip() if len(parts) > 1 else "—"
+            else:
+                name = title.strip()
+                role = "—"
+            
             if not looks_like_person(name):
                 continue
-            role = "—"
-            parts = re.split(r"–|-", title)
-            if len(parts) > 1:
-                role = parts[1].strip()
+            
+            # Clean up role - remove truncation artifacts or overly short roles
+            if role != "—" and (len(role) <= 2 or not any(c.isalpha() for c in role[1:])):
+                role = "—"
+            
             org = "—"
             if " at " in snippet:
                 org = snippet.split(" at ")[-1].split(".")[0].strip()
