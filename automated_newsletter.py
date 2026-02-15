@@ -37,6 +37,10 @@ TODAY = datetime.now().date()
 # Email format configuration
 USE_CONDENSED_EMAIL = True  # Set to False to use full format with all data
 
+# Data retention configuration
+KEEP_RECENT_REPORTS = 3  # Number of recent HTML reports to keep (0 = keep all, 1 = only latest)
+CLEANUP_OLD_REPORTS = True  # Set to False to never delete old reports
+
 # Web hosting configuration for full reports
 # IMPORTANT: Set this to your hosted URL before sending to users!
 # Options:
@@ -262,6 +266,7 @@ def clear_weekly_data():
     csv_files = ['grants.csv', 'events.csv', 'csr_reports.csv', 'experts.csv']
     cleared_count = 0
     
+    # Clear CSV data files
     for csv_file in csv_files:
         path = OUTPUT_FOLDER / csv_file
         if path.exists():
@@ -269,15 +274,41 @@ def clear_weekly_data():
             cleared_count += 1
             print(f"🗑️  Cleared {csv_file}")
     
-    # Keep only the latest HTML report (delete older ones)
-    html_files = sorted(OUTPUT_FOLDER.glob("climate_cardinals_report_*.html"))
-    if len(html_files) > 1:
-        # Keep the newest, delete the rest
-        for old_report in html_files[:-1]:
-            old_report.unlink()
-            print(f"🗑️  Cleared old report: {old_report.name}")
-    
     print(f"✅ Weekly data cleared ({cleared_count} CSV files)")
+    
+    # Clean up old HTML reports based on configuration
+    if CLEANUP_OLD_REPORTS:
+        cleanup_old_reports()
+
+def cleanup_old_reports():
+    """Remove old HTML reports, keeping only the N most recent ones"""
+    # Get all report files sorted by date (newest first)
+    html_files = sorted(
+        OUTPUT_FOLDER.glob("climate_cardinals_report_*.html"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True
+    )
+    
+    if not html_files:
+        return
+    
+    # Determine how many to keep
+    keep_count = max(1, KEEP_RECENT_REPORTS)  # Always keep at least 1
+    
+    if len(html_files) > keep_count:
+        old_reports = html_files[keep_count:]
+        print(f"\n🗑️  Cleaning up old reports (keeping {keep_count} most recent)...")
+        
+        for old_report in old_reports:
+            try:
+                old_report.unlink()
+                print(f"   ✖️  Deleted: {old_report.name}")
+            except Exception as e:
+                print(f"   ⚠️  Failed to delete {old_report.name}: {e}")
+        
+        print(f"✅ Cleaned up {len(old_reports)} old report(s)")
+    else:
+        print(f"\n📁 Currently have {len(html_files)} report(s) (keeping {keep_count})")
 
 def load_or_create_state():
     """Load state.json or create new one"""

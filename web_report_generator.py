@@ -218,6 +218,48 @@ def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_d
             background: #1a5538;
             transform: translateY(-2px);
         }}
+        .toggle-btn {{
+            display: block;
+            margin: 40px auto 0;
+            background: linear-gradient(135deg, #0a2f1f 0%, #1a5538 100%);
+            color: #ffffff;
+            border: none;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 16px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(10, 47, 31, 0.3);
+        }}
+        .toggle-btn:hover {{
+            background: linear-gradient(135deg, #1a5538 0%, #2d7a50 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(10, 47, 31, 0.4);
+        }}
+        .toggle-btn:active {{
+            transform: translateY(0);
+        }}
+        .item-hidden {{
+            display: none;
+        }}
+        /* Print styles - show all content when printing */
+        @media print {{
+            .item-hidden {{
+                display: block !important;
+            }}
+            .toggle-btn,
+            .back-to-top {{
+                display: none !important;
+            }}
+            .item-card,
+            .expert-card {{
+                page-break-inside: avoid;
+            }}
+        }}
     </style>
 </head>
 <body>
@@ -427,6 +469,69 @@ def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_d
         
         // Initially hide the button
         document.querySelector('.back-to-top').style.display = 'none';
+        
+        // Read More/Show Less functionality
+        document.addEventListener('DOMContentLoaded', function() {{
+            const sections = document.querySelectorAll('.section');
+            
+            sections.forEach(section => {{
+                // Get all cards in this section (both expert-card and item-card)
+                const cards = section.querySelectorAll('.expert-card, .item-card');
+                
+                // Only add toggle functionality if there are more than 3 cards
+                if (cards.length > 3) {{
+                    // Hide cards after the first 3
+                    cards.forEach((card, index) => {{
+                        if (index >= 3) {{
+                            card.classList.add('item-hidden');
+                        }}
+                    }});
+                    
+                    // Create toggle button
+                    const toggleBtn = document.createElement('button');
+                    toggleBtn.className = 'toggle-btn';
+                    toggleBtn.textContent = `Read More (${{cards.length - 3}} more)`;
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                    toggleBtn.setAttribute('aria-label', `Show ${{cards.length - 3}} more items`);
+                    
+                    // Add click handler
+                    let isExpanded = false;
+                    toggleBtn.addEventListener('click', function() {{
+                        isExpanded = !isExpanded;
+                        
+                        cards.forEach((card, index) => {{
+                            if (index >= 3) {{
+                                if (isExpanded) {{
+                                    card.classList.remove('item-hidden');
+                                }} else {{
+                                    card.classList.add('item-hidden');
+                                }}
+                            }}
+                        }});
+                        
+                        // Update button text and accessibility
+                        if (isExpanded) {{
+                            toggleBtn.textContent = 'Show Less';
+                            toggleBtn.setAttribute('aria-expanded', 'true');
+                            toggleBtn.setAttribute('aria-label', 'Show fewer items');
+                        }} else {{
+                            toggleBtn.textContent = `Read More (${{cards.length - 3}} more)`;
+                            toggleBtn.setAttribute('aria-expanded', 'false');
+                            toggleBtn.setAttribute('aria-label', `Show ${{cards.length - 3}} more items`);
+                            
+                            // Scroll to section header when collapsing
+                            const sectionHeader = section.querySelector('.section-header');
+                            if (sectionHeader) {{
+                                sectionHeader.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
+                            }}
+                        }}
+                    }});
+                    
+                    // Append button to section
+                    section.appendChild(toggleBtn);
+                }}
+            }});
+        }});
     </script>
 </body>
 </html>"""

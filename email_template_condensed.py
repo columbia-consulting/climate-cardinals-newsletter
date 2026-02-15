@@ -81,17 +81,8 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
     html = html.replace("FULL_EVENTS_URL", f"{report_url}#events")
     html = html.replace("FULL_CSR_URL", f"{report_url}#reports")
     
-    # Generate condensed content for each section (top 3 items)
-    experts_html = generate_condensed_experts_html(experts_df)
-    grants_html = generate_condensed_grants_html(grants_df)
-    events_html = generate_condensed_events_html(events_df)
-    csr_html = generate_condensed_csr_html(csr_df)
-    
-    # Replace content placeholders
-    html = html.replace("<!-- EXPERTS_CONTENT_PLACEHOLDER -->", experts_html)
-    html = html.replace("<!-- GRANTS_CONTENT_PLACEHOLDER -->", grants_html)
-    html = html.replace("<!-- EVENTS_CONTENT_PLACEHOLDER -->", events_html)
-    html = html.replace("<!-- CSR_CONTENT_PLACEHOLDER -->", csr_html)
+    # Email now only shows overview with counts and "View Details" buttons
+    # No need to generate condensed content - users click through to hosted page
     
     return html
 
