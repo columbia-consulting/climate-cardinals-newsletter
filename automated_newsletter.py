@@ -554,30 +554,36 @@ def main():
     # Load state
     state = load_or_create_state()
     
+    # Track new data from today's scrape (empty if skipped)
+    grants_data = []
+    events_data = []
+    csr_data = []
+    experts_data = []
+    
     # Check if already scraped today
-    if state.get('last_scrape_date') == str(TODAY):
+    already_scraped = state.get('last_scrape_date') == str(TODAY)
+    
+    if already_scraped:
         print(f"⏭️  Already scraped data today ({TODAY}), skipping scrape")
-        print("   Run on a different day or delete state.json to force re-scrape")
-        return
-    
-    # Scrape new data
-    print("\n🔍 Scraping new data...")
-    grants_data = run_section(GRANT_KEYWORDS, future=True)
-    events_data = run_section(EVENT_KEYWORDS, future=True)
-    csr_data = run_section(CSR_KEYWORDS, future=False)
-    experts_data = run_experts(EXPERT_QUERIES)
-    
-    # Accumulate to CSV files (with deduplication)
-    write_csv("grants.csv", grants_data)
-    write_csv("events.csv", events_data)
-    write_csv("csr_reports.csv", csr_data)
-    write_csv("experts.csv", experts_data)
-    
-    print(f"\n✅ CSVs saved to: {OUTPUT_FOLDER.resolve()}")
-    
-    # Update state with last scrape date
-    state['last_scrape_date'] = str(TODAY)
-    save_state(state)
+    else:
+        # Scrape new data
+        print("\n🔍 Scraping new data...")
+        grants_data = run_section(GRANT_KEYWORDS, future=True)
+        events_data = run_section(EVENT_KEYWORDS, future=True)
+        csr_data = run_section(CSR_KEYWORDS, future=False)
+        experts_data = run_experts(EXPERT_QUERIES)
+        
+        # Accumulate to CSV files (with deduplication)
+        write_csv("grants.csv", grants_data)
+        write_csv("events.csv", events_data)
+        write_csv("csr_reports.csv", csr_data)
+        write_csv("experts.csv", experts_data)
+        
+        print(f"\n✅ CSVs saved to: {OUTPUT_FOLDER.resolve()}")
+        
+        # Update state with last scrape date
+        state['last_scrape_date'] = str(TODAY)
+        save_state(state)
     
     # Load accumulated data for email (all data from the week)
     grants_df = pd.read_csv(OUTPUT_FOLDER / "grants.csv") if (OUTPUT_FOLDER / "grants.csv").exists() else pd.DataFrame()
@@ -591,8 +597,12 @@ def main():
     all_csr = csr_df.to_dict('records') if not csr_df.empty else []
     all_experts = experts_df.to_dict('records') if not experts_df.empty else []
     
-    # Send email (only on Monday)
-    email_sent = send_email(all_grants, all_events, all_csr, all_experts, use_condensed=USE_CONDENSED_EMAIL)
+    # Send email (only on Monday, and only if not already sent today)
+    if state.get('last_email_sent') == str(TODAY):
+        print(f"⏭️  Email already sent today ({TODAY}), skipping")
+        email_sent = False
+    else:
+        email_sent = send_email(all_grants, all_events, all_csr, all_experts, use_condensed=USE_CONDENSED_EMAIL)
     
     # Clear data if email was successfully sent
     if email_sent:
