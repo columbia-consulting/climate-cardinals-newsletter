@@ -109,7 +109,11 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
         print(f"   OR setup Netlify and add WEB_REPORT_BASE_URL to .env")
     
     # Replace all URL placeholders with the actual report URL(s)
+    # FULL_REPORT_URL remains the index page (used for the bottom button)
     html = html.replace("FULL_REPORT_URL", report_url)
+    # LATEST_REPORT_URL should point to the latest-dated report we selected above
+    latest_url = section_base if 'section_base' in locals() else report_url
+    html = html.replace("LATEST_REPORT_URL", latest_url)
     # section links may have been computed above, fallback to report_url anchors
     html = html.replace("FULL_EXPERTS_URL", experts_url if 'experts_url' in locals() else f"{report_url}#experts")
     html = html.replace("FULL_GRANTS_URL", grants_url if 'grants_url' in locals() else f"{report_url}#grants")
