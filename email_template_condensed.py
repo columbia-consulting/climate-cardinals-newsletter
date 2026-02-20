@@ -59,19 +59,26 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
     report_filename = f"climate_cardinals_report_{today.strftime('%Y%m%d')}.html"
     
     if base_url:
-        # Use hosted URL (production).
-        # Rather than linking directly to the date‑specific file (which may not
-        # exist yet when the email is sent), point at the index page.  The index
-        # is deployed every Monday by the weekly-report action and always contains
-        # links to the latest report file.
+        # Use hosted URL (production).  We link the main "full report" button to
+        # the index page so that the link always resolves immediately when the
+        # workflow runs.  Individual section buttons point directly to the
+        # dated report file so they can jump to the relevant section.
         base_url = base_url.rstrip('/')  # Remove trailing slash if present
-        report_url = f"{base_url}/index.html"
-        print(f"📡 Report URLs will use: {report_url} (index page)")
+        report_url = f"{base_url}/index.html"                    # for full-report link
+        section_base = f"{base_url}/{report_filename}"          # for anchors
+        experts_url = f"{section_base}#experts"
+        grants_url  = f"{section_base}#grants"
+        events_url  = f"{section_base}#events"
+        csr_url     = f"{section_base}#reports"
+        print(f"📡 Full report URL will use: {report_url} (index page)")
     else:
-        # FALLBACK: Use GitHub raw link as temporary solution.  This is mostly
-        # for local testing when WEB_REPORT_BASE_URL is unset; it will 404 until
-        # you push the generated file to GitHub and replace the placeholders.
+        # FALLBACK: Use GitHub raw link as temporary solution.  The section URLs
+        # still use the dated file so they behave similarly in local tests.
         report_url = f"https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/weekly_data/{report_filename}"
+        experts_url = f"{report_url}#experts"
+        grants_url  = f"{report_url}#grants"
+        events_url  = f"{report_url}#events"
+        csr_url     = f"{report_url}#reports"
         print(f"⚠️  WEB_REPORT_BASE_URL not set!")
         print(f"   Using temporary GitHub raw URL: {report_url}")
         print(f"   These links will work after you:")
@@ -79,12 +86,13 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
         print(f"   2. Replace YOUR_USERNAME/YOUR_REPO with your actual repo")
         print(f"   OR setup Netlify and add WEB_REPORT_BASE_URL to .env")
     
-    # Replace all URL placeholders with the actual report URL
+    # Replace all URL placeholders with the actual report URL(s)
     html = html.replace("FULL_REPORT_URL", report_url)
-    html = html.replace("FULL_EXPERTS_URL", f"{report_url}#experts")
-    html = html.replace("FULL_GRANTS_URL", f"{report_url}#grants")  
-    html = html.replace("FULL_EVENTS_URL", f"{report_url}#events")
-    html = html.replace("FULL_CSR_URL", f"{report_url}#reports")
+    # section links may have been computed above, fallback to report_url anchors
+    html = html.replace("FULL_EXPERTS_URL", experts_url if 'experts_url' in locals() else f"{report_url}#experts")
+    html = html.replace("FULL_GRANTS_URL", grants_url if 'grants_url' in locals() else f"{report_url}#grants")
+    html = html.replace("FULL_EVENTS_URL", events_url if 'events_url' in locals() else f"{report_url}#events")
+    html = html.replace("FULL_CSR_URL", csr_url if 'csr_url' in locals() else f"{report_url}#reports")
     
     # Email now only shows overview with counts and "View Details" buttons
     # No need to generate condensed content - users click through to hosted page
