@@ -1,3 +1,7 @@
+# Netlify configuration is retained for reference but the project
+# no longer uses Netlify for deployment.  Builds on the free tier
+# consume credits and have been replaced with a GitHub Pages workflow.
+
 [build]
   publish = "weekly_data"
   command = ""
