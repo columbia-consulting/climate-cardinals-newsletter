@@ -59,13 +59,18 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
     report_filename = f"climate_cardinals_report_{today.strftime('%Y%m%d')}.html"
     
     if base_url:
-        # Use hosted URL (production)
+        # Use hosted URL (production).
+        # Rather than linking directly to the date‑specific file (which may not
+        # exist yet when the email is sent), point at the index page.  The index
+        # is deployed every Monday by the weekly-report action and always contains
+        # links to the latest report file.
         base_url = base_url.rstrip('/')  # Remove trailing slash if present
-        report_url = f"{base_url}/{report_filename}"
-        print(f"📡 Report URLs will use: {report_url}")
+        report_url = f"{base_url}/index.html"
+        print(f"📡 Report URLs will use: {report_url} (index page)")
     else:
-        # FALLBACK: Use GitHub raw link as temporary solution
-        # Note: This will 404 until files are committed to GitHub, but at least buttons are clickable
+        # FALLBACK: Use GitHub raw link as temporary solution.  This is mostly
+        # for local testing when WEB_REPORT_BASE_URL is unset; it will 404 until
+        # you push the generated file to GitHub and replace the placeholders.
         report_url = f"https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/weekly_data/{report_filename}"
         print(f"⚠️  WEB_REPORT_BASE_URL not set!")
         print(f"   Using temporary GitHub raw URL: {report_url}")
