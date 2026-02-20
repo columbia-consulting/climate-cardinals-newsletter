@@ -59,18 +59,40 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
     report_filename = f"climate_cardinals_report_{today.strftime('%Y%m%d')}.html"
     
     if base_url:
-        # Use hosted URL (production).  We link the main "full report" button to
-        # the index page so that the link always resolves immediately when the
-        # workflow runs.  Individual section buttons point directly to the
-        # dated report file so they can jump to the relevant section.
+        # Use hosted URL (production).  Always set the full-report link to the
+        # index page so it never 404s.  For section buttons we normally point
+        # at the current-dated report, but if that file is not yet live on the
+        # server we fall back to the most recent report listed in the index.
+        import requests, re
+
         base_url = base_url.rstrip('/')  # Remove trailing slash if present
         report_url = f"{base_url}/index.html"                    # for full-report link
-        section_base = f"{base_url}/{report_filename}"          # for anchors
+
+        # candidate file for sections
+        section_filename = report_filename
+        section_base = f"{base_url}/{section_filename}"
+
+        # verify remote existence with a HEAD request
+        try:
+            r = requests.head(section_base, timeout=5)
+            if r.status_code != 200:
+                raise Exception("not found")
+        except Exception:
+            # parse index page to discover latest available report link
+            try:
+                idx = requests.get(report_url, timeout=5).text
+                m = re.search(r'href="([^"]*climate_cardinals_report_[0-9]{8}\.html)"', idx)
+                if m:
+                    section_base = f"{base_url}/{m.group(1)}"
+            except Exception:
+                pass
+
         experts_url = f"{section_base}#experts"
         grants_url  = f"{section_base}#grants"
         events_url  = f"{section_base}#events"
         csr_url     = f"{section_base}#reports"
         print(f"📡 Full report URL will use: {report_url} (index page)")
+        print(f"📡 Section URLs will use: {section_base}#<anchor>")
     else:
         # FALLBACK: Use GitHub raw link as temporary solution.  The section URLs
         # still use the dated file so they behave similarly in local tests.
