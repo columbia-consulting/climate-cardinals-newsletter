@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Cardinals - Complete Weekly Intelligence Report</title>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/fk-screamer');
+        @import url('https://fonts.cdnfonts.com/css/athletics');
+
+        body {
+            font-family: 'Athletics', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            color: #192928;
+        }
+
+        /* responsive helpers */
+        @media screen and (max-width: 800px) {
+            .header h1 {
+                font-size: 38px !important;
+                line-height: 1.1 !important;
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .header {
+            padding: 50px 40px;
+            background: linear-gradient(135deg, #3154ff 0%, #253292 100%);
+            color: #ffffff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0;
+            margin: 0;
+            background: #ff082c;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 40px 25px;
+            background: #ff082c;
+            border-right: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+        }
+
+        .stat-card:last-child {
+            border-right: none;
+        }
+
+        .stat-card:hover {
+            background: #f95208;
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 48px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 12px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .section {
+            padding: 50px 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 36px;
+            font-weight: 900;
+            color: #192928;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .section-subtitle {
+            font-family: 'Athletics', Arial, sans-serif;
+            font-size: 15px;
+            color: #666666;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .item-card {
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-left: 5px solid #ff082c;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .item-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            border-left-color: #3154ff;
+        }
+
+        .item-title {
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 20px;
+            font-weight: 900;
+            color: #192928;
+            margin: 0 0 15px 0;
+            line-height: 1.3;
+        }
+
+        .item-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            font-size: 13px;
+            color: #3154ff;
+            font-weight: 600;
+        }
+
+        .item-description {
+            font-family: 'Athletics', Arial, sans-serif;
+            font-size: 15px;
+            color: #192928;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .item-link {
+            display: inline-block;
+            background: #ff082c;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 14px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .item-link:hover {
+            background: #3154ff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(49, 84, 255, 0.4);
+        }
+
+        .expert-card {
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-left: 5px solid #3154ff;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .expert-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            border-left-color: #ff082c;
+        }
+
+        .expert-name {
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 22px;
+            font-weight: 900;
+            color: #192928;
+            margin: 0 0 10px 0;
+        }
+
+        .expert-role {
+            font-family: 'Athletics', Arial, sans-serif;
+            font-size: 15px;
+            color: #666666;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .linkedin-btn {
+            display: inline-block;
+            background: #3154ff;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .linkedin-btn:hover {
+            background: #ff082c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 8, 44, 0.4);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f5fe 100%);
+            border: 2px dashed #9fdfff;
+            border-radius: 12px;
+            color: #192928;
+            opacity: 0.7;
+        }
+
+        .footer {
+            padding: 60px 40px;
+            background: #000000;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff082c;
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 8, 44, 0.5);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .back-to-top:hover {
+            background: #3154ff;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 25px rgba(49, 84, 255, 0.5);
+        }
+
+        .toggle-btn {
+            display: block;
+            margin: 40px auto 0;
+            background: linear-gradient(135deg, #3154ff 0%, #253292 100%);
+            color: #ffffff;
+            border: none;
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 14px;
+            font-weight: 900;
+            padding: 16px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(49, 84, 255, 0.3);
+        }
+
+        .toggle-btn:hover {
+            background: linear-gradient(135deg, #ff082c 0%, #f95208 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 8, 44, 0.4);
+        }
+
+        .toggle-btn:active {
+            transform: translateY(0);
+        }
+
+        .item-hidden {
+            display: none;
+        }
+
+        /* Print styles - show all content when printing */
+        @media print {
+            .item-hidden {
+                display: block !important;
+            }
+
+            .toggle-btn,
+            .back-to-top {
+                display: none !important;
+            }
+
+            .item-card,
+            .expert-card {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div
+                style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 11px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; margin-bottom: 20px; opacity: 0.9;">
+                Complete Weekly Intelligence • Issue #9</div>
+            <h1
+                style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 56px; font-weight: 900; color: #ffffff; margin: 0 0 15px 0; line-height: 1; letter-spacing: -2px;">
+                🌍 CLIMATE CARDINALS</h1>
+            <p
+                style="font-family: 'Athletics', Arial, sans-serif; font-size: 20px; color: #ffffff; margin: 0 0 30px 0; opacity: 0.95; font-weight: 600;">
+                Complete
+                Weekly Intelligence Report</p>
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; padding-top: 20px; padding-bottom: 10px; border-top: 2px solid rgba(255,255,255,0.3);">
+                <div
+                    style="font-family: 'Athletics', Arial, sans-serif; font-size: 15px; font-weight: 700; color: #ffffff; opacity: 0.95;">
+                    📅 February 24, 2026</div>
+                <div
+                    style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 11px; color: #ffffff; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9;">
+                    Complete Dataset</div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <a href="#experts" class="stat-card">
+                    <div class="stat-number">19</div>
+                    <div class="stat-label">Climate Experts</div>
+                </a>
+                <a href="#grants" class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Grant Opportunities</div>
+                </a>
+                <a href="#events" class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Upcoming Events</div>
+                </a>
+                <a href="#reports" class="stat-card">
+                    <div class="stat-number">13</div>
+                    <div class="stat-label">ESG Reports</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="section" id="experts">
+            <div class="section-header">
+                <h2 class="section-title">👤 Climate Experts</h2>
+                <p class="section-subtitle">Climate leaders and decision-makers actively seeking partnerships and collaboration</p>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Daniel Zarin</div>
+                <div class="expert-role">Executive Director. Forests & Climate Change | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/daniel-zarin-88a844ab" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Amanda Leland</div>
+                <div class="expert-role">Executive Director, Environmental Defense Fund</div>
+                <a href="https://www.linkedin.com/in/amanda-leland" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Keya Chatterjee</div>
+                <div class="expert-role">Social and Climate Justice Advocate, Nonprofit ...</div>
+                <a href="https://www.linkedin.com/in/keya-chatterjee-937a3986" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Teresa Opheim</div>
+                <div class="expert-role">Executive Director, Climate Land Leaders | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/teresaopheim" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Rouwenna Altemose</div>
+                <div class="expert-role">Co-Founder and Co-Executive Director at All In ...</div>
+                <a href="https://www.linkedin.com/in/rouwenna" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Nicole Rom</div>
+                <div class="expert-role">Executive Nonprofit & Philanthropy Leader - LinkedIn</div>
+                <a href="https://www.linkedin.com/in/nicolerom" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Leah Qusba</div>
+                <div class="expert-role">Renewables | Disruptive Digital | CEO - LinkedIn</div>
+                <a href="https://www.linkedin.com/in/leahqusba" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Sarah Golden</div>
+                <div class="expert-role">VP, Climate Tech & Executive Director @ Trellis Group</div>
+                <a href="https://www.linkedin.com/in/sbgolden" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Julia Strong</div>
+                <div class="expert-role">Founder/Executive Director, Symbiosis Coalition</div>
+                <a href="https://www.linkedin.com/in/julia-osterman-strong" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Stacey Stubbs</div>
+                <div class="expert-role">Assistant Manager to Global Manager / Head of ...</div>
+                <a href="https://www.linkedin.com/in/staceystubbsr2ehusa" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Sara Sticha</div>
+                <div class="expert-role">Target | LinkedIn LinkedIn’s head of sustainability on unlocking its ‘superpowers’ Linkedin Global Sustainability Director quits after 7 months ... Mark Berry - Head of Sustainability | LinkedIn Anna Stammers - Head of Sustainability - LinkedIn</div>
+                <a href="https://www.linkedin.com/in/sara-sticha-b911ab79" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Mark Berry</div>
+                <div class="expert-role">Head of Sustainability | LinkedIn</div>
+                <a href="https://uk.linkedin.com/in/mberryenvironment" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Colleen Pickford</div>
+                <div class="expert-role">Nonprofit Executive | Advancing Mission-Driven Growth</div>
+                <a href="https://www.linkedin.com/in/colleen-pickford" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Dr. Janice L.</div>
+                <div class="expert-role">VP | Sustainability, Regulatory & Governance l Non ...</div>
+                <a href="https://www.linkedin.com/in/janiceillao" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Katie Farhat</div>
+                <div class="expert-role">Corporate Responsibility and Sustainability</div>
+                <a href="https://www.linkedin.com/in/katiefarhat" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Angela Baker</div>
+                <div class="expert-role">Vice President, Chief Sustainability Officer at Qualcomm ...</div>
+                <a href="https://www.linkedin.com/in/angela-baker-ba7b772" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Margaret Coady</div>
+                <div class="expert-role">Fortune 50 Corporate Sustainability Leader</div>
+                <a href="https://www.linkedin.com/in/margaretcoady" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Danielle Droitsch</div>
+                <div class="expert-role">Environmental Policy & Nonprofit Leader - LinkedIn</div>
+                <a href="https://www.linkedin.com/in/danielledroitsch" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Paula Pagniez</div>
+                <div class="expert-role">Howden, Executive Director, Climate Risk and Resilience | Former FEMA National Advisory Council Member | Former United Nations' UNDRR ARISE Global Board Director | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/ppagniez/" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+</div>
+        <div class="section" id="grants">
+            <div class="section-header">
+                <h2 class="section-title">💰 Grants & Funding</h2>
+                <p class="section-subtitle">Active grant programs and funding opportunities to accelerate climate initiatives</p>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2026 Climate Resilience Grant Program - nature.org</div>
+                <div class="item-meta"><span class="meta-item">🌐 nature.org</span></div>
+                <div class="item-description">Nov 1, 2025 · The goal of the program is to support New York’s conservation community in protecting the lands and waters that contribute to New York’s resilience to climate change for the benefit of people and nature.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www.nature.org/en-us/about-us/where-we-work/united-states/new-york/stories-in-new-york/funding-grant-program-climate-resilience/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Funding & Capacity | U.S. Climate Resilience Toolkit</div>
+                <div class="item-meta"><span class="meta-item">🌐 toolkit.climate.gov</span></div>
+                <div class="item-description">Communities are often eligible to apply for grant funding from federal, state, non-profit, or private entities for resilience -building projects. They might also be able to raise funds for resilience actions through taxes or fees. Money from either of these sources doesn't need to be repaid.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://toolkit.climate.gov/funding-capacity" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">50 Nonprofits That Provide Grants for Environmental Sustainability ...</div>
+                <div class="item-meta"><span class="meta-item">🌐 www2.fundsforngos.org</span></div>
+                <div class="item-description">Environmental sustainability grants are essential financial resources aimed at supporting projects that promote ecological balance, conservation, and sustainable practices. These grants are typically provided by government agencies, private foundations, and nonprofit organizations, with the goal of fostering initiatives that address pressing environmental issues such as climate change ...</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www2.fundsforngos.org/articles-searching-grants-and-donors/50-nonprofits-that-provide-grants-for-environmental-sustainability-projects/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Funding Opportunities – Climate Smart Communities Initiative</div>
+                <div class="item-meta"><span class="meta-item">🌐 climatesmartcommunity.org</span></div>
+                <div class="item-description">CSCI anticipates awarding between 16-20 grants for the 2026 cycle. The program prioritizes funding for communities that include historically disinvested populations at increased risk to climate-related impacts . It is open to US-based project teams composed of a climate adaptation practitioner ...</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://climatesmartcommunity.org/funding/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Adaptation Planning Grant Program - Office of Land Use and ...</div>
+                <div class="item-meta"><span class="meta-item">🌐 lci.ca.gov</span></div>
+                <div class="item-description">The Adaptation Planning Grant Program (APGP) is designed to fill local, regional, and tribal planning needs, provide communities the resources to identify climate resilience priorities, and support the development of a pipeline of climate resilient infrastructure projects across the state.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://lci.ca.gov/climate/icarp/grants/adaptation-planning-grant.html" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">WCS Climate Adaptation Fund</div>
+                <div class="item-meta"><span class="meta-item">🌐 wcsclimateadaptationfund.org</span></div>
+                <div class="item-description">The WCS Climate Adaptation Fund provides grant awards to conservation non-profits across the United States to catalyze innovative, science-driven projects responding to the impacts of climate change on wildlife and people.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www.wcsclimateadaptationfund.org/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Adaptation and Resilience Fund - ClimateWorks Foundation</div>
+                <div class="item-meta"><span class="meta-item">🌐 climateworks.org</span></div>
+                <div class="item-description">September 20, 2025 - The Fund brings together philanthropic funding and expertise to address multiple climate hazards, and accelerate and catalyze systems transformation to support people facing the greatest climate impacts. In response to the United Nations secretary-general’s urgent July 25 Call to Action on Extreme Heat, the fund’s first wave of grants will focus on helping cities and communities build resilience to extreme heat in urban areas in South Asia, Southeast Asia, and sub-Saharan Africa, prioritizing cities with high levels of informal labor and housing, inward migration pressure, and exposure to extreme heat.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www.climateworks.org/programs/adaptation-and-resilience/fund/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate Resilience Fund – Building Resilience, Together</div>
+                <div class="item-meta"><span class="meta-item">🌐 climateresiliencefund.org</span></div>
+                <div class="item-description">The Climate Smart Communities Initiative (CSCI) is announcing 21 grants totaling $2.2M to help communities across the country plan and prepare for extreme ...</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www.climateresiliencefund.org/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate Resiliency Planning - Cook County</div>
+                <div class="item-meta"><span class="meta-item">🌐 cookcountyil.gov</span></div>
+                <div class="item-description">Cook County allocated nearly $16 million in American Rescue Plan Act (ARPA) funds to support suburban municipalities in developing Climate Resiliency Plans.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www.cookcountyil.gov/climateresiliency" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">COMMUNITY RESILIENCE FUND - Crossroads Fund</div>
+                <div class="item-meta"><span class="meta-item">🌐 crossroadsfund.org</span></div>
+                <div class="item-description">Through the Community Resilience Fund , we aim to support Chicago’s bold, connected, and courageous communities by equipping our movement ecosystem with the resources, tools, trainings, and counsel needed to keep us safe.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://crossroadsfund.org/grants/grant-opportunities/community-resilience-fund/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Community Resilience: New grant awards $5K for ...</div>
+                <div class="item-meta"><span class="meta-item">🌐 news.illinoisstate.edu</span></div>
+                <div class="item-description">Jul 15, 2025 · The Center for Civic Engagement, with support from COUNTRY Financial, invites proposals for a new grant program focused on community resilience . Proposals are due September 9, 2025.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://news.illinoisstate.edu/2025/07/community-resilience-new-grant-awards-5k-for-interdisciplinary-teams/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Community Resilience Centers - Strategic Growth Council</div>
+                <div class="item-meta"><span class="meta-item" style="background: #ffe8ec; padding: 6px 12px; border-radius: 6px; color: #ff082c; font-weight: 700;">⏰ Rolling deadline</span><span class="meta-item">🌐 sgc.ca.gov</span></div>
+                <div class="item-description">SGC’s CRC program will fund new construction and upgrades of neighborhood-level resilience centers to provide shelter and resources during climate and other emergencies. The program will also fund year-round services and ongoing programming that build overall community resilience .</div>
+                
+                <a href="https://sgc.ca.gov/grant-programs/crc/" class="item-link">View Grant Details →</a>
+            </div>
+</div>
+        <div class="section" id="events">
+            <div class="section-header">
+                <h2 class="section-title">🎤 Events & Conferences</h2>
+                <p class="section-subtitle">Premier gatherings where climate leaders convene to share insights and forge partnerships</p>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2026 Conference | Climate Change: Impacts & Responses Research...</div>
+                <div class="item-meta"><span class="meta-item" style="background: #e8f4ff; padding: 6px 12px; border-radius: 6px; color: #0066cc; font-weight: 700;">📅 In 1 month</span><span class="meta-item">🗓️ 22 April 2026</span><span class="meta-item">🌐 on-climate.com</span></div>
+                <div class="item-description">Eighteenth International Conference on Climate Change: Impacts & Responses, University of the Aegean, Rhodes, Greece, 20-22 April 2026 .</div>
+                <a href="https://on-climate.com/2026-conference" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">UN Climate Change Conference - Antalya, November 2026 | UNFCCC</div>
+                <div class="item-meta"><span class="meta-item">🌐 unfccc.int</span></div>
+                <div class="item-description">Consider sharing in a digital format before printing onto paper. Process and meetings. Conferences . UN Climate Change Conference - Antalya, November 2026 .</div>
+                <a href="https://unfccc.int/cop31" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2026 Independent News Sustainability Summit</div>
+                <div class="item-meta"><span class="meta-item">🌐 lionpublishers.com</span></div>
+                <div class="item-description">We're heading to San Diego from September 9–11 for our 2026 Independent News Sustainability Summit. Sponsorship opportunities are now available; check out our ...</div>
+                <a href="https://lionpublishers.com/summit-2026/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2026 SUMMIT | MRSS - Midwest Regional Sustainability Summit</div>
+                <div class="item-meta"><span class="meta-item">🌐 midwestsustainabilitysummit.org</span></div>
+                <div class="item-description">This year's Summit asks: How do we adapt today so we can thrive tomorrow? How can we—across sectors and systems—build the agility, creativity, and collective ...</div>
+                <a href="https://www.midwestsustainabilitysummit.org/2026" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">North American Sustainability & Responsibility Summit</div>
+                <div class="item-meta"><span class="meta-item" style="background: #e8f4ff; padding: 6px 12px; border-radius: 6px; color: #0066cc; font-weight: 700;">📅 In 6 days</span><span class="meta-item">🗓️ March 3, 2026</span><span class="meta-item">🌐 executiveplatforms.com</span></div>
+                <div class="item-description">North American Sustainability & Responsibility Summit · March 1 - March 3, 2026 · Join This Year's Conversation · Featured Speakers · Paulette Frank · Sam Harris.</div>
+                <a href="https://www.executiveplatforms.com/nasrs/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Welcome - Sustainability Delivery Summit Landing Page</div>
+                <div class="item-meta"><span class="meta-item" style="background: #e8f4ff; padding: 6px 12px; border-radius: 6px; color: #0066cc; font-weight: 700;">📅 In 7 months</span><span class="meta-item">🗓️ 8 October 2026</span><span class="meta-item">🌐 sustainabilitydeliverysummit.com</span></div>
+                <div class="item-description">The next Sustainability Delivery Summit will take place in London, UK on 8 October 2026. · Sustainability Delivery Awards · Sustainability Delivery Summit London.</div>
+                <a href="https://sustainabilitydeliverysummit.com/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Home | Climate Change Events| Sustainability... - Climate Week 2026</div>
+                <div class="item-meta"><span class="meta-item">🌐 climateweek.thepeopleevents.com</span></div>
+                <div class="item-description">By participating in Climate Week 2026 , you will have the opportunity to engage in discussions on cutting-edge technologies, sustainability strategies, and climate equity, while connecting...</div>
+                <a href="https://climateweek.thepeopleevents.com/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate Week NYC 2026 (New York City) - Climate ... -- showsbee.com</div>
+                <div class="item-meta"><span class="meta-item">🌐 showsbee.com</span></div>
+                <div class="item-description">Climate Week NYC will bring together CEOs from the world''s leading companies, heads of some of the world''s largest sub-national governments and civil soc. Climate Week NYC 2026 is...</div>
+                <a href="https://www.showsbee.com/fairs/Climate-Week-NYC.html" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate Week NYC (Sep 2026 ), New York USA - Conference</div>
+                <div class="item-meta"><span class="meta-item">🌐 10times.com</span></div>
+                <div class="item-description">2026 edition of Climate Week NYC will be held at New York starting on 20th September. It is a 8 day event organised by The Climate Group and will conclude on 27-Sep- 2026 .</div>
+                <a href="https://10times.com/climate-week-nyc-new-york" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate Week Home | Climate Week</div>
+                <div class="item-meta"><span class="meta-item">🌐 climateweek.provost.upenn.edu</span></div>
+                <div class="item-description">Climate Week 2026 will mark Penn's 7th official observance of Climate Week . Event dates and a theme are being finalized. Questions or ideas about this year’s programming?</div>
+                <a href="https://climateweek.provost.upenn.edu/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Brain Resilience Symposia | Knight Initiative</div>
+                <div class="item-meta"><span class="meta-item">🌐 brainresilience.stanford.edu</span></div>
+                <div class="item-description">The Knight Initiative for Brain Resilience hosts quarterly symposia throughout the academic year, convening our research community and members of the public to learn about the frontiers...</div>
+                <a href="https://brainresilience.stanford.edu/event-series/brain-resilience-symposia" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">International Symposium Resilience of Sea Peoples in Southeast...</div>
+                <div class="item-meta"><span class="meta-item">🌐 maps.toyo.ac.jp</span></div>
+                <div class="item-description">14:50-14:55 Introduction — Fujii Shinichi 14:55-15:15 On Indigenous Resilience : The Orang Suku Laut — Cynthia Chou (University of Iowa) 15:15-15:35 Boat as a Nexus Linking Maritime...</div>
+                <a href="https://www.maps.toyo.ac.jp/activity/2026symposium/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Resilience Symposium - YouTube</div>
+                <div class="item-meta"><span class="meta-item">🌐 youtube.com</span></div>
+                <div class="item-description">Resilience Symposium 2022: In Awe of Space - learn about awe and resilience from space experts because everyone deserves to have positive mental health and that certainly includes you.</div>
+                <a href="https://www.youtube.com/channel/UCMTurHR2-W3nZR0jGI-H_JA" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Environmental Conferences 2026/2027/2028 - Conference Index</div>
+                <div class="item-meta"><span class="meta-item">🌐 conferenceindex.org</span></div>
+                <div class="item-description">Environmental Conferences 2026 2027 2028 is for the researchers, scientists, scholars, engineers, academic, scientific and university practitioners to present research activities that might want to attend events, meetings, seminars, congresses, workshops, summit, and symposiums.</div>
+                <a href="https://conferenceindex.org/conferences/environmental" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate events 2026: Conferences, summits and more</div>
+                <div class="item-meta"><span class="meta-item">🌐 thinklandscape.globallandscapesforum.org</span></div>
+                <div class="item-description">4 weeks ago - The European Center of Sustainable Development (ECSDEV), in collaboration with CIT University, is organizing ICSD 2026 under the theme “Creating a Unified Foundation for Sustainable Development: Research, Practice and Education” · The ...</div>
+                <a href="https://thinklandscape.globallandscapesforum.org/101100/climate-events-2026/" class="item-link">Read Full Article →</a>
+            </div>
+</div>
+        <div class="section" id="reports">
+            <div class="section-header">
+                <h2 class="section-title">📊 ESG & Sustainability Reports</h2>
+                <p class="section-subtitle">Latest corporate sustainability disclosures and environmental impact assessments</p>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">PDF Sustainability Report</div>
+                <div class="item-meta"><span class="meta-item">🌐 assets.new.siemens.com</span></div>
+                <div class="item-description">The company commits to sustainability by pioneering breakthroughs to make health-care accessible and affordable for patients everywhere, driving a decarbonized and circular value chain, and devel-oping its diverse workforce, engaging them in creating greater business and societal impact together also with their strategic partners.</div>
+                <a href="https://assets.new.siemens.com/siemens/assets/api/uuid:32a7154d-edba-47bc-8e9b-9761617ba774/sustainability-report.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">PDF Sustainability Report 2025 - ExxonMobil</div>
+                <div class="item-meta"><span class="meta-item">🌐 corporate.exxonmobil.com</span></div>
+                <div class="item-description">Our 14 Sustainability Focus Areas were developed by analyzing our environmental and social impacts, business strategies, current events, and internal and external stakeholders' priorities.</div>
+                <a href="https://corporate.exxonmobil.com/-/media/global/files/sustainability-report/2024/sustainability-report.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">PDF Bosch sustainability report 2024</div>
+                <div class="item-meta"><span class="meta-item">🌐 assets.bosch.com</span></div>
+                <div class="item-description">09 Sustainability management To us, sustainability means striking a balance between the economic, environmental, and social dimensions of our business activities as part of responsible corporate governance.</div>
+                <a href="https://assets.bosch.com/media/global/sustainability/reporting_and_data/2024/bosch-sustainability-report-2024.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">PDF Global Sustainability Report - The Boeing Company</div>
+                <div class="item-meta"><span class="meta-item">🌐 boeing.com</span></div>
+                <div class="item-description">Vice President, Global Enterprise Sustainability Responsible for enterprisewide sustainability strategy, focusing on priorities, stakeholder-oriented reporting and company performance</div>
+                <a href="https://www.boeing.com/content/dam/boeing/boeingdotcom/sustainability/pdf/2025-boeing-sustainability-report.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">ESG Report 2025</div>
+                <div class="item-meta"><span class="meta-item">🌐 lgtcp.com</span></div>
+                <div class="item-description">Our Environmental, Social and Governance ( ESG ) Report 2025 is structured around four key chapters that reflect both recent developments in the ESG landscape and our ongoing journey as a responsible investor.</div>
+                <a href="https://www.lgtcp.com/files/2025-10/lgt_capital_partners_esg_report_2025_web.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2024 Environmental, Social & Governance Report - Dun & Bradstreet</div>
+                <div class="item-meta"><span class="meta-item">🌐 dnb.com</span></div>
+                <div class="item-description">Environmental sustainability and related risk management are priorities for us, both in the solutions we provide to our clients and in our own operations. This global Environmental, Social & Governance ( ESG ) Report brings a significant shift to how we report.</div>
+                <a href="https://www.dnb.com/content/dam/web/company/about/esg/reports/DnB_Global_ESG_Report_2024.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">ESG Report 2024 - aia.com</div>
+                <div class="item-meta"><span class="meta-item">🌐 aia.com</span></div>
+                <div class="item-description">Our ESG Report 2024 showcases the actions we are taking to create a healthier, sustainable future for AIA, our communities and Asia. Delivering better health outcomes, championing financial inclusion and expanding access to quality care.</div>
+                <a href="https://www.aia.com/content/dam/group-wise/en/docs/ESG/2024/Main-ESG-Report_EN.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Starbucks Global Impact Report Fiscal 2024</div>
+                <div class="item-meta"><span class="meta-item">🌐 about.starbucks.com</span></div>
+                <div class="item-description">Starbucks Global · Impact Report · Fiscal 2024 · PARTNERS COFFEE COMMUNITY ENVIRONMENT</div>
+                <a href="https://about.starbucks.com/uploads/2025/05/Starbucks-Fiscal-2024-Global-Impact-Report.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2025 Global Impact Report | Deloitte Global</div>
+                <div class="item-meta"><span class="meta-item">🌐 deloitte.com</span></div>
+                <div class="item-description">2025 Global Impact Report (7 MB PDF ) 2025 Performance Metrics and Reporting Frameworks (2 MB PDF) FY2025 Global Environmental Performance Summary (2 MB PDF) Over the past year, we have helped Deloitte clients, our people, and society navigate ...</div>
+                <a href="https://www.deloitte.com/global/en/about/governance/global-impact-report.html" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Task Force on Climate -Related Financial Disclosures | TCFD)</div>
+                <div class="item-meta"><span class="meta-item">🌐 fsb-tcfd.org</span></div>
+                <div class="item-description">Climate change presents financial risk to the global economy. Financial markets need clear, comprehensive, high-quality information on the impacts of climate change.</div>
+                <a href="https://www.fsb-tcfd.org/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2025 Climate disclosure</div>
+                <div class="item-meta"><span class="meta-item">🌐 bendigoadelaide.com.au</span></div>
+                <div class="item-description">This report represents the 2025 Climate ‑related Disclosure for Bendigo and Adelaide Bank (Bendigo Bank) for the financial year ending 30 June 2025.</div>
+                <a href="https://www.bendigoadelaide.com.au/globalassets/documents/bendigoadelaide/investorcentre/results-and-reporting/sustainability-reports/climate-disclosure-2025.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Disclosure Reports — Creative Climate Disclosure</div>
+                <div class="item-meta"><span class="meta-item">🌐 creativesforclimate.org</span></div>
+                <div class="item-description">RR Climate Disclosure Report (Master)[2].jpg. rubber republic. We are creative strategists, filmmakers and change creators, who believe in the power of entertainment to build a...</div>
+                <a href="https://www.creativesforclimate.org/disclosurereports" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">CLIMATE DISCLOSURE</div>
+                <div class="item-meta"><span class="meta-item">🌐 societegenerale.com</span></div>
+                <div class="item-description">Climate disclosure report - september 2020. C0-PUBLIC. “ Climate scenarios are not just a tool for risk management, but key to shaping our strategic decisions on climate change...</div>
+                <a href="https://www.societegenerale.com/sites/default/files/documents/2020-12/societe-generale-climate-disclosure-report.pdf" class="item-link">Read Full Article →</a>
+            </div>
+</div>
+        <div class="footer">
+            <div style="font-size: 48px; margin-bottom: 20px;">🌍</div>
+            <h3
+                style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 28px; font-weight: 900; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px;">
+                CLIMATE CARDINALS</h3>
+            <p
+                style="font-family: 'Athletics', Arial, sans-serif; font-size: 15px; opacity: 0.9; margin: 0 0 20px 0; font-weight: 600;">
+                Complete Weekly Intelligence Report</p>
+            <div style="width: 60px; height: 3px; background: #ffffff; margin: 20px auto;"></div>
+            <p style="font-family: 'Athletics', Arial, sans-serif; font-size: 12px; opacity: 0.7; margin: 12px 0 0 0;">©
+                2026 Climate Cardinals • Generated on February 24, 2026</p>
+        </div>
+    </div>
+    
+    <!-- Back to top button -->
+    <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Back to top">↑</button>
+    
+    <script>
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // Initially hide the button
+        document.querySelector('.back-to-top').style.display = 'none';
+        
+        // Read More/Show Less functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section');
+            
+            sections.forEach(section => {
+                // Get all cards in this section (both expert-card and item-card)
+                const cards = section.querySelectorAll('.expert-card, .item-card');
+                
+                // Only add toggle functionality if there are more than 3 cards
+                if (cards.length > 3) {
+                    // Hide cards after the first 3
+                    cards.forEach((card, index) => {
+                        if (index >= 3) {
+                            card.classList.add('item-hidden');
+                        }
+                    });
+                    
+                    // Create toggle button
+                    const toggleBtn = document.createElement('button');
+                    toggleBtn.className = 'toggle-btn';
+                    toggleBtn.textContent = `Read More (${cards.length - 3} more)`;
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                    toggleBtn.setAttribute('aria-label', `Show ${cards.length - 3} more items`);
+                    
+                    // Add click handler
+                    let isExpanded = false;
+                    toggleBtn.addEventListener('click', function() {
+                        isExpanded = !isExpanded;
+                        
+                        cards.forEach((card, index) => {
+                            if (index >= 3) {
+                                if (isExpanded) {
+                                    card.classList.remove('item-hidden');
+                                } else {
+                                    card.classList.add('item-hidden');
+                                }
+                            }
+                        });
+                        
+                        // Update button text and accessibility
+                        if (isExpanded) {
+                            toggleBtn.textContent = 'Show Less';
+                            toggleBtn.setAttribute('aria-expanded', 'true');
+                            toggleBtn.setAttribute('aria-label', 'Show fewer items');
+                        } else {
+                            toggleBtn.textContent = `Read More (${cards.length - 3} more)`;
+                            toggleBtn.setAttribute('aria-expanded', 'false');
+                            toggleBtn.setAttribute('aria-label', `Show ${cards.length - 3} more items`);
+                            
+                            // Scroll to section header when collapsing
+                            const sectionHeader = section.querySelector('.section-header');
+                            if (sectionHeader) {
+                                sectionHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }
+                    });
+                    
+                    // Append button to section
+                    section.appendChild(toggleBtn);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
