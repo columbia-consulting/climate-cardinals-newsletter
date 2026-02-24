@@ -780,6 +780,18 @@ def update_index_html(output_dir="weekly_data"):
     # Remove any reports dated in the future (e.g. test files or mistakes)
     today = datetime.now()
     reports_data = [r for r in reports_data if r['date'] <= today]
+
+    # If there are multiple files from the same ISO week, keep only the newest one
+    seen_weeks = set()
+    filtered = []
+    for r in reports_data:
+        iso = r['date'].isocalendar()
+        wk_key = (iso[0], iso[1])  # (year, week number)
+        if wk_key in seen_weeks:
+            continue
+        seen_weeks.add(wk_key)
+        filtered.append(r)
+    reports_data = filtered
     
     # Get the latest report for the main button
     latest_report = reports_data[0]['filename'] if reports_data else None
