@@ -8,6 +8,19 @@
     <style>
         @import url('https://fonts.cdnfonts.com/css/fk-screamer');
         @import url('https://fonts.cdnfonts.com/css/athletics');
+
+        /* responsive adjustments for mobile devices */
+        @media screen and (max-width: 600px) {
+            /* reduce the main header on narrow viewports */
+            h1 {
+                font-size: 38px !important;
+            }
+
+            /* also shrink the stats numbers slightly so they don't overflow */
+            .stats-grid div[style*="font-size: 56px"] {
+                font-size: 48px !important;
+            }
+        }
     </style>
 </head>
 

@@ -102,6 +102,13 @@
             color: #8b7355;
             font-size: 14px;
         }
+
+        /* index page responsive tweaks are inserted at generation time below */
+        @media screen and (max-width: 600px) {
+            .logo { font-size: 60px; }
+            h1 { font-size: 28px; }
+            .btn { padding: 12px 30px; font-size: 14px; }
+        }
     </style>
 </head>
 
@@ -112,12 +119,15 @@
         <p>Weekly Intelligence Reports for Climate Action Leaders</p>
 
         <div>
-            <a href="climate_cardinals_report_20260223.html" class="btn">View Latest Report</a>
+            <a href="climate_cardinals_report_20260224.html" class="btn">View Latest Report</a>
             <a href="#reports" class="btn secondary">All Reports</a>
         </div>
 
         <div id="reports" class="reports-list">
             <h3 style="color: #0a2f1f; margin-bottom: 20px;">📊 Available Reports</h3>
+            <a href="climate_cardinals_report_20260224.html" class="report-link">
+                📅 Week 9 - February 24, 2026
+            </a>
             <a href="climate_cardinals_report_20260223.html" class="report-link">
                 📅 Week 9 - February 23, 2026
             </a>

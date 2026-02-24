@@ -80,6 +80,14 @@ def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_d
             color: #192928;
         }}
 
+        /* responsive helpers */
+        @media screen and (max-width: 800px) {{
+            .header h1 {{
+                font-size: 38px !important;
+                line-height: 1.1 !important;
+            }}
+        }}
+
         .container {{
             max-width: 1000px;
             margin: 0 auto;
@@ -894,6 +902,13 @@ def update_index_html(output_dir="weekly_data"):
             border-top: 1px solid #e8ece9;
             color: #8b7355;
             font-size: 14px;
+        }}
+
+        /* index page responsive tweaks are inserted at generation time below */
+        @media screen and (max-width: 600px) {{
+            .logo {{ font-size: 60px; }}
+            h1 {{ font-size: 28px; }}
+            .btn {{ padding: 12px 30px; font-size: 14px; }}
         }}
     </style>
 </head>

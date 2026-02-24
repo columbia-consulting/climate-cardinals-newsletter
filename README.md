@@ -6,6 +6,7 @@ Automated weekly climate intelligence newsletter system.
 - Daily scraping (Tuesday–Sunday)
 - Weekly email digest (Monday)
 - Weekly static site deployed with GitHub Pages
+- Header and email layout now scale correctly on mobile devices (responsive CSS added)
 - Zero maintenance required after initial setup
 
 ## Setup
