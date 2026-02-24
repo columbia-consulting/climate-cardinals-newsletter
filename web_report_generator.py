@@ -769,6 +769,10 @@ def update_index_html(output_dir="weekly_data"):
     # Sort by date (newest first)
     reports_data.sort(key=lambda x: x['date'], reverse=True)
     
+    # Remove any reports dated in the future (e.g. test files or mistakes)
+    today = datetime.now()
+    reports_data = [r for r in reports_data if r['date'] <= today]
+    
     # Get the latest report for the main button
     latest_report = reports_data[0]['filename'] if reports_data else None
     

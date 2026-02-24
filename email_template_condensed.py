@@ -183,6 +183,9 @@ def generate_condensed_grants_html(grants_df):
             description = description[:117] + "..."
             
         meta_parts = []
+        scraped = row.get('Scraped', '')
+        if scraped:
+            meta_parts.append(f'🗓️ {scraped}')
         if date_info and date_info != '—':
             meta_parts.append(f'📅 {date_info}')
         if domain and domain != '—':
@@ -226,6 +229,9 @@ def generate_condensed_events_html(events_df):
             description = description[:117] + "..."
             
         meta_parts = []
+        scraped = row.get('Scraped', '')
+        if scraped:
+            meta_parts.append(f'🗓️ {scraped}')
         if date_info and date_info != '—':
             meta_parts.append(f'📅 {date_info}')
         if domain and domain != '—':
@@ -269,6 +275,9 @@ def generate_condensed_csr_html(csr_df):
             description = description[:117] + "..."
             
         meta_parts = []
+        scraped = row.get('Scraped', '')
+        if scraped:
+            meta_parts.append(f'🗓️ {scraped}')
         if date_info and date_info != '—':
             meta_parts.append(f'📅 {date_info}')
         if domain and domain != '—':

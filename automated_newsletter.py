@@ -377,6 +377,16 @@ def write_csv(name, data):
     else:
         combined_df = new_df
     
+    # Add a scraped date column for every new row so users can see when
+    # the item was collected.  This will let clients know that a grant was
+    # fetched this week even if its underlying deadline looks old.
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    if 'Scraped' not in new_df.columns:
+        new_df['Scraped'] = today_str
+    else:
+        # override existing values for new rows
+        new_df.loc[:, 'Scraped'] = today_str
+
     # Determine which column to use for deduplication
     # experts.csv uses 'LinkedIn', others use 'URL'
     if 'LinkedIn' in combined_df.columns:
