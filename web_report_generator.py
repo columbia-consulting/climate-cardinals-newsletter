@@ -956,3 +956,40 @@ def update_index_html(output_dir="weekly_data"):
     
     print(f"🏠 Index page updated with {len(reports_data)} report(s)")
     return index_path
+
+
+def main():
+    """Main entry point - regenerate report with current CSV data"""
+    OUTPUT_FOLDER = Path("weekly_data")
+    
+    # Load current CSV data
+    experts_df = pd.read_csv(OUTPUT_FOLDER / "experts.csv") if (OUTPUT_FOLDER / "experts.csv").exists() else pd.DataFrame()
+    grants_df = pd.read_csv(OUTPUT_FOLDER / "grants.csv") if (OUTPUT_FOLDER / "grants.csv").exists() else pd.DataFrame()
+    events_df = pd.read_csv(OUTPUT_FOLDER / "events.csv") if (OUTPUT_FOLDER / "events.csv").exists() else pd.DataFrame()
+    csr_df = pd.read_csv(OUTPUT_FOLDER / "csr_reports.csv") if (OUTPUT_FOLDER / "csr_reports.csv").exists() else pd.DataFrame()
+    
+    print("=" * 70)
+    print("🌍 CLIMATE CARDINALS - WEB REPORT GENERATOR")
+    print("=" * 70)
+    print(f"📅 Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print()
+    print("📊 Data Summary:")
+    print(f"   👥 Climate Experts: {len(experts_df)}")
+    print(f"   💰 Grants: {len(grants_df)}")
+    print(f"   🎤 Events: {len(events_df)}")
+    print(f"   📊 ESG Reports: {len(csr_df)}")
+    print()
+    
+    # Generate the report
+    report_path = generate_full_report_html(experts_df, grants_df, events_df, csr_df)
+    
+    # Generate and save metadata
+    metadata = generate_report_metadata(experts_df, grants_df, events_df, csr_df, report_path)
+    print()
+    print(f"✅ Report generated for week {metadata['week_number']}")
+    print(f"📄 Report saved: {report_path}")
+    print(f"✅ All files deployed to GitHub Pages")
+
+
+if __name__ == "__main__":
+    main()
