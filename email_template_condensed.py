@@ -68,24 +68,53 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
         base_url = base_url.rstrip('/')  # Remove trailing slash if present
         report_url = f"{base_url}/index.html"                    # for full-report link
 
-        # candidate file for sections
-        section_filename = report_filename
-        section_base = f"{base_url}/{section_filename}"
-
-        # verify remote existence with a HEAD request
-        try:
-            r = requests.head(section_base, timeout=5)
-            if r.status_code != 200:
-                raise Exception("not found")
-        except Exception:
-            # parse index page to discover latest available report link
+        def _url_exists(url: str) -> bool:
             try:
-                idx = requests.get(report_url, timeout=5).text
-                m = re.search(r'href="([^"]*climate_cardinals_report_[0-9]{8}\.html)"', idx)
-                if m:
-                    section_base = f"{base_url}/{m.group(1)}"
+                r = requests.head(url, timeout=5, allow_redirects=True)
+                if r.status_code == 405:
+                    r = requests.get(url, timeout=5, allow_redirects=True)
+                return 200 <= r.status_code < 400
             except Exception:
-                pass
+                return False
+
+        section_base = None
+
+        # Try both possible publish layouts:
+        # 1) report at root (automated gh-pages publish_dir behavior)
+        # 2) report under /weekly_data (manual branch commits)
+        candidate_paths = [
+            report_filename,
+            f"weekly_data/{report_filename}",
+        ]
+        for rel_path in candidate_paths:
+            candidate_url = f"{base_url}/{rel_path}"
+            if _url_exists(candidate_url):
+                section_base = candidate_url
+                break
+
+        # If today's file isn't live yet, discover latest from available index pages.
+        if not section_base:
+            index_candidates = [
+                f"{base_url}/index.html",
+                f"{base_url}/weekly_data/index.html",
+            ]
+            for idx_url in index_candidates:
+                try:
+                    idx_html = requests.get(idx_url, timeout=8).text
+                    m = re.search(r'href="([^"]*climate_cardinals_report_[0-9]{8}\.html)"', idx_html)
+                    if m:
+                        href = m.group(1).strip()
+                        if href.startswith("http://") or href.startswith("https://"):
+                            section_base = href
+                        else:
+                            section_base = f"{base_url}/{href.lstrip('/')}"
+                        break
+                except Exception:
+                    continue
+
+        # Last-resort fallback to root dated path
+        if not section_base:
+            section_base = f"{base_url}/{report_filename}"
 
         experts_url = f"{section_base}#experts"
         grants_url  = f"{section_base}#grants"
