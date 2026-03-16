@@ -1,11 +1,11 @@
 {
-  "date": "2026-03-09",
-  "week_number": 11,
-  "report_url": "/home/runner/work/climate-cardinals-newsletter/climate-cardinals-newsletter/weekly_data/climate_cardinals_report_20260309.html",
+  "date": "2026-03-16",
+  "week_number": 12,
+  "report_url": "/home/runner/work/climate-cardinals-newsletter/climate-cardinals-newsletter/weekly_data/climate_cardinals_report_20260316.html",
   "counts": {
-    "experts": 58,
-    "grants": 59,
-    "events": 55,
-    "csr": 52
+    "experts": 62,
+    "grants": 56,
+    "events": 57,
+    "csr": 53
   }
 }
