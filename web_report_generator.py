@@ -11,6 +11,24 @@ import json
 import glob
 import re
 
+
+def _extract_report_stat_signature(report_path):
+    """Best-effort parse of report stat cards to score report completeness."""
+    try:
+        text = Path(report_path).read_text(encoding='utf-8')
+    except Exception:
+        return (-1, -1)
+
+    # Each report has 4 stat numbers in the header; use their sum as quality score.
+    values = re.findall(r'<div class="stat-number">(\d+)</div>', text)
+    if len(values) < 4:
+        return (-1, -1)
+
+    ints = [int(v) for v in values[:4]]
+    non_zero_sections = sum(1 for v in ints if v > 0)
+    total = sum(ints)
+    return (non_zero_sections, total)
+
 def calculate_event_countdown(date_str):
     """Convert a date string into a countdown format like 'In 4 weeks'"""
     if not date_str or date_str == "—":
@@ -46,10 +64,10 @@ def calculate_event_countdown(date_str):
     except:
         return date_str  # If parsing fails, return original date
 
-def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_dir="weekly_data"):
+def generate_full_report_html(experts_df, grants_df, events_df, csr_df, output_dir="weekly_data", report_datetime=None):
     """Generate a complete HTML report with all data"""
-    
-    today = datetime.now()
+
+    today = report_datetime or datetime.now()
     week_num = today.isocalendar()[1]
     date_str = today.strftime("%B %d, %Y")
     
@@ -781,17 +799,9 @@ def update_index_html(output_dir="weekly_data"):
     today = datetime.now()
     reports_data = [r for r in reports_data if r['date'] <= today]
 
-    # If there are multiple files from the same ISO week, keep only the newest one
-    seen_weeks = set()
-    filtered = []
-    for r in reports_data:
-        iso = r['date'].isocalendar()
-        wk_key = (iso[0], iso[1])  # (year, week number)
-        if wk_key in seen_weeks:
-            continue
-        seen_weeks.add(wk_key)
-        filtered.append(r)
-    reports_data = filtered
+    # Show ALL reports in reverse chronological order (newest first)
+    # This allows users to see all available reports, including test versions
+    reports_data = sorted(reports_data, key=lambda x: x['date'], reverse=True)
     
     # Get the latest report for the main button
     latest_report = reports_data[0]['filename'] if reports_data else None
