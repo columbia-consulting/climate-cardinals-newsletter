@@ -803,8 +803,27 @@ def update_index_html(output_dir="weekly_data"):
     # This allows users to see all available reports, including test versions
     reports_data = sorted(reports_data, key=lambda x: x['date'], reverse=True)
     
-    # Get the latest report for the main button
-    latest_report = reports_data[0]['filename'] if reports_data else None
+    # Pick latest button target from the newest ISO week, preferring canonical
+    # Monday issue over same-week test reruns.
+    latest_report = None
+    if reports_data:
+        newest = reports_data[0]['date']
+        newest_week = (newest.isocalendar()[0], newest.isocalendar()[1])
+        newest_week_candidates = [
+            r for r in reports_data
+            if (r['date'].isocalendar()[0], r['date'].isocalendar()[1]) == newest_week
+        ]
+
+        latest_report = sorted(
+            newest_week_candidates,
+            key=lambda x: (
+                _extract_report_stat_signature(Path(output_dir) / x['filename'])[0],
+                1 if x['date'].weekday() == 0 else 0,
+                x['date'],
+                _extract_report_stat_signature(Path(output_dir) / x['filename'])[1],
+            ),
+            reverse=True,
+        )[0]['filename']
     
     # Generate report links HTML (show first N and allow expanding)
     initial_visible_reports = 6

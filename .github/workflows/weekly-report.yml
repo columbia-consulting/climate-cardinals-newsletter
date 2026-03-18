@@ -40,5 +40,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./weekly_data
           publish_branch: gh-pages
-          publish_conflict_resolution: "keep"  # keep existing files if nothing new
+          force_orphan: true  # publish a clean branch each run to avoid stale files
 

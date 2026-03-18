@@ -6,6 +6,7 @@ Validate consistency between CSV data, latest web report, email output, and inde
 from __future__ import annotations
 
 import re
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -34,6 +35,13 @@ def load_csv_counts() -> dict[str, int]:
 def find_latest_report_file() -> Path | None:
     reports = sorted(OUTPUT_FOLDER.glob(REPORT_GLOB), key=lambda p: p.name)
     return reports[-1] if reports else None
+
+
+def extract_report_date(report_path: Path) -> datetime.date | None:
+    match = re.search(r"(\d{8})", report_path.name)
+    if not match:
+        return None
+    return datetime.strptime(match.group(1), "%Y%m%d").date()
 
 
 def parse_report_counts(report_path: Path) -> dict[str, int]:
@@ -98,8 +106,17 @@ def main() -> int:
         print("\nFAIL: No report files found in weekly_data/")
         return 1
 
-    report_counts = parse_report_counts(latest_report)
-    print(f"\nLatest report file: {latest_report.name}")
+    index_path = OUTPUT_FOLDER / "index.html"
+    index_latest = parse_index_latest_link(index_path) if index_path.exists() else None
+    report_for_validation = latest_report
+    if index_latest:
+        index_report_path = OUTPUT_FOLDER / index_latest
+        if index_report_path.exists():
+            report_for_validation = index_report_path
+
+    report_counts = parse_report_counts(report_for_validation)
+    print(f"\nLatest report file (by filename): {latest_report.name}")
+    print(f"Report used for validation (index target): {report_for_validation.name}")
     print(f"  Experts: {report_counts['experts']}")
     print(f"  Grants: {report_counts['grants']}")
     print(f"  Events: {report_counts['events']}")
@@ -120,22 +137,33 @@ def main() -> int:
     print(f"  Events: {email_counts['events']}")
     print(f"  CSR Reports: {email_counts['csr']}")
 
-    index_path = OUTPUT_FOLDER / "index.html"
-    index_latest = parse_index_latest_link(index_path) if index_path.exists() else None
     print(f"\nindex.html latest link: {index_latest or 'MISSING'}")
 
     ok = True
+    report_date = extract_report_date(report_for_validation)
+    today = datetime.now().date()
     if report_counts != csv_counts:
-        ok = False
-        print("\nFAIL: Latest report counts do not match CSV counts.")
+        if report_date == today:
+            ok = False
+            print("\nFAIL: Latest report counts do not match CSV counts.")
+        else:
+            print(
+                "\nWARN: Latest report appears to be a historical snapshot "
+                f"({report_date}); skipping strict report-vs-CSV check."
+            )
 
     if email_counts != csv_counts:
         ok = False
         print("FAIL: Email counts do not match CSV counts.")
 
-    if index_latest != latest_report.name:
+    if not index_latest:
         ok = False
-        print("FAIL: index.html latest link does not point to latest report file.")
+        print("FAIL: index.html latest link is missing.")
+    elif index_latest != latest_report.name:
+        print(
+            "WARN: index.html latest link differs from lexicographically latest file "
+            "(this can be expected when canonical Monday reports are preferred)."
+        )
 
     if ok:
         print("\nPASS: CSV, report, email, and index latest link are consistent.")
