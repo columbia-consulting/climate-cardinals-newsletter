@@ -105,6 +105,52 @@ def looks_relevant(title, snippet, url):
     
     return any(t in blob for t in CLIMATE_TERMS)
 
+
+def looks_like_active_grant(title, snippet, date_info):
+    """Heuristic filter to keep active grant opportunities and drop grant news."""
+    blob = f"{title} {snippet}".lower()
+
+    positive_signals = [
+        "apply",
+        "application",
+        "applications",
+        "deadline",
+        "funding opportunity",
+        "request for proposals",
+        "rfp",
+        "open call",
+        "grant program",
+        "now accepting",
+        "eligible",
+    ]
+    negative_signals = [
+        "announcing",
+        "grantees",
+        "grantee",
+        "awardees",
+        "awarded",
+        "winner",
+        "winners",
+        "press release",
+        "recap",
+        "highlights",
+    ]
+
+    has_positive = any(sig in blob for sig in positive_signals)
+    has_negative = any(sig in blob for sig in negative_signals)
+
+    # Strong reject for announcement-style pages unless they also include
+    # explicit application/funding language.
+    if has_negative and not has_positive:
+        return False
+
+    # Keep entries that have an explicit future/rolling date signal.
+    if date_info and date_info != "—":
+        return True
+
+    # For undated grants, keep only pages with explicit opportunity language.
+    return has_positive
+
 # ---------------------- UTILS ----------------------
 def clean_text(txt):
     return html.unescape(re.sub(r"\s+", " ", txt or "").strip())
@@ -238,7 +284,7 @@ def web_search(query, num=8):
     return results
 
 # ---------------------- CORE PIPELINE ----------------------
-def run_section(keywords, future=True):
+def run_section(keywords, future=True, section_type=None):
     rows = []
     seen_domains = set()
     for kw in keywords:
@@ -260,6 +306,9 @@ def run_section(keywords, future=True):
                 continue
             
             date_info = extract_date_snippet(f"{title} {snippet}", future=future)
+
+            if section_type == "grants" and not looks_like_active_grant(title, snippet, date_info):
+                continue
             
             # For future events/grants, filter smartly
             if future:
@@ -365,6 +414,13 @@ def write_csv(name, data):
     
     # Convert new data to DataFrame
     new_df = pd.DataFrame(data)
+
+    # Stamp new rows before merge so combined output always includes this run date.
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    if 'Scraped' not in new_df.columns:
+        new_df['Scraped'] = today_str
+    else:
+        new_df.loc[:, 'Scraped'] = today_str
     
     # Load existing data if file exists
     if path.exists():
@@ -377,16 +433,6 @@ def write_csv(name, data):
     else:
         combined_df = new_df
     
-    # Add a scraped date column for every new row so users can see when
-    # the item was collected.  This will let clients know that a grant was
-    # fetched this week even if its underlying deadline looks old.
-    today_str = datetime.now().strftime('%Y-%m-%d')
-    if 'Scraped' not in new_df.columns:
-        new_df['Scraped'] = today_str
-    else:
-        # override existing values for new rows
-        new_df.loc[:, 'Scraped'] = today_str
-
     # Determine which column to use for deduplication
     # experts.csv uses 'LinkedIn', others use 'URL'
     if 'LinkedIn' in combined_df.columns:
@@ -399,8 +445,8 @@ def write_csv(name, data):
         print(f"Saved {name} (+{len(new_df)} new, {len(combined_df)} total, no deduplication)")
         return
     
-    # Remove duplicates by unique column (keep first occurrence)
-    deduplicated_df = combined_df.drop_duplicates(subset=[dedup_column], keep='first')
+    # Remove duplicates by unique column (keep latest occurrence from this run)
+    deduplicated_df = combined_df.drop_duplicates(subset=[dedup_column], keep='last')
     
     # Save back to CSV
     deduplicated_df.to_csv(path, index=False)
@@ -523,9 +569,23 @@ def send_email(grants_data, events_data, csr_data, experts_data, use_condensed=T
     if not csr_df.empty:
         csr_df = csr_df.rename(columns={'Organization': 'Domain'})
     
+    # Generate report from the exact same DataFrames that drive email counts.
+    report_filename = None
+    if use_condensed:
+        from web_report_generator import generate_full_report_html
+        report_path = generate_full_report_html(experts_df, grants_df, events_df, csr_df)
+        report_filename = Path(report_path).name
+
     # Generate HTML using selected template
     if use_condensed:
-        html_content = generate_template(experts_df, grants_df, events_df, csr_df, base_url=WEB_REPORT_BASE_URL)
+        html_content = generate_template(
+            experts_df,
+            grants_df,
+            events_df,
+            csr_df,
+            base_url=WEB_REPORT_BASE_URL,
+            report_filename=report_filename,
+        )
     else:
         html_content = generate_template(experts_df, grants_df, events_df, csr_df)
     
@@ -578,8 +638,8 @@ def main():
     else:
         # Scrape new data
         print("\n🔍 Scraping new data...")
-        grants_data = run_section(GRANT_KEYWORDS, future=True)
-        events_data = run_section(EVENT_KEYWORDS, future=True)
+        grants_data = run_section(GRANT_KEYWORDS, future=True, section_type="grants")
+        events_data = run_section(EVENT_KEYWORDS, future=True, section_type="events")
         csr_data = run_section(CSR_KEYWORDS, future=False)
         experts_data = run_experts(EXPERT_QUERIES)
         

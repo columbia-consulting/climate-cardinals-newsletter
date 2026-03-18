@@ -6,9 +6,44 @@ and links to full report for users who want complete data
 import pandas as pd
 from pathlib import Path
 import re
-from web_report_generator import generate_full_report_html, generate_report_metadata
 
-def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base_url=""):
+import requests
+
+def _url_exists(url):
+    """Return True when URL is reachable, handling servers that disallow HEAD."""
+    try:
+        response = requests.head(url, timeout=5, allow_redirects=True)
+        if response.status_code == 405:
+            response = requests.get(url, timeout=5, allow_redirects=True)
+        return 200 <= response.status_code < 400
+    except Exception:
+        return False
+
+
+def _pick_report_url(base_url, report_filename):
+    """Resolve the best hosted URL for a known report filename."""
+    if report_filename.startswith("http://") or report_filename.startswith("https://"):
+        return report_filename
+
+    cleaned = report_filename.lstrip('/')
+    if cleaned.startswith("weekly_data/"):
+        candidates = [
+            f"{base_url}/{cleaned}",
+            f"{base_url}/{cleaned.replace('weekly_data/', '', 1)}",
+        ]
+    else:
+        candidates = [
+            f"{base_url}/{cleaned}",
+            f"{base_url}/weekly_data/{cleaned}",
+        ]
+
+    for candidate in candidates:
+        if _url_exists(candidate):
+            return candidate
+    return None
+
+
+def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base_url="", report_filename=None):
     """Generate condensed email with top 3 items per section and links to full report
     
     Args:
@@ -19,10 +54,6 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
         base_url: Base URL for hosted reports (e.g., "https://yourusername.github.io/reports")
                   Leave empty to use local file:// URLs (only works on your computer)
     """
-    
-    # Generate full web report first
-    report_path = generate_full_report_html(experts_df, grants_df, events_df, csr_df)
-    metadata = generate_report_metadata(experts_df, grants_df, events_df, csr_df, report_path)
     
     # Read condensed email template
     template_path = Path(__file__).parent / "email_template_condensed.html"
@@ -56,44 +87,19 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
     html = html.replace("TOTAL_CSR_COUNT", str(csr_count))
     
     # Generate report URL based on hosting configuration
-    report_filename = f"climate_cardinals_report_{today.strftime('%Y%m%d')}.html"
+    explicit_report_filename = bool(report_filename)
+    report_filename = report_filename or f"climate_cardinals_report_{today.strftime('%Y%m%d')}.html"
     
     if base_url:
-        # Use hosted URL (production).  Always set the full-report link to the
-        # index page so it never 404s.  For section buttons we normally point
-        # at the current-dated report, but if that file is not yet live on the
-        # server we fall back to the most recent report listed in the index.
-        import requests, re
+        # Use hosted URL (production). Keep the bottom CTA on index page so it
+        # never 404s. Section links point to an explicit report file when known.
+        base_url = base_url.rstrip('/')
+        report_url = f"{base_url}/index.html"
+        section_base = _pick_report_url(base_url, report_filename)
 
-        base_url = base_url.rstrip('/')  # Remove trailing slash if present
-        report_url = f"{base_url}/index.html"                    # for full-report link
-
-        def _url_exists(url: str) -> bool:
-            try:
-                r = requests.head(url, timeout=5, allow_redirects=True)
-                if r.status_code == 405:
-                    r = requests.get(url, timeout=5, allow_redirects=True)
-                return 200 <= r.status_code < 400
-            except Exception:
-                return False
-
-        section_base = None
-
-        # Try both possible publish layouts:
-        # 1) report at root (automated gh-pages publish_dir behavior)
-        # 2) report under /weekly_data (manual branch commits)
-        candidate_paths = [
-            report_filename,
-            f"weekly_data/{report_filename}",
-        ]
-        for rel_path in candidate_paths:
-            candidate_url = f"{base_url}/{rel_path}"
-            if _url_exists(candidate_url):
-                section_base = candidate_url
-                break
-
-        # If today's file isn't live yet, discover latest from available index pages.
-        if not section_base:
+        # If no explicit report was provided and hosted file probing fails,
+        # discover the most recent report from index pages as a fallback.
+        if not explicit_report_filename and not section_base:
             index_candidates = [
                 f"{base_url}/index.html",
                 f"{base_url}/weekly_data/index.html",
@@ -101,9 +107,9 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
             for idx_url in index_candidates:
                 try:
                     idx_html = requests.get(idx_url, timeout=8).text
-                    m = re.search(r'href="([^"]*climate_cardinals_report_[0-9]{8}\.html)"', idx_html)
-                    if m:
-                        href = m.group(1).strip()
+                    match = re.search(r'href="([^"]*climate_cardinals_report_[0-9]{8}\.html)"', idx_html)
+                    if match:
+                        href = match.group(1).strip()
                         if href.startswith("http://") or href.startswith("https://"):
                             section_base = href
                         else:
@@ -112,9 +118,10 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
                 except Exception:
                     continue
 
-        # Last-resort fallback to root dated path
+        # For explicit report filenames, avoid old-week redirects by falling
+        # back to index if the target file is not live yet.
         if not section_base:
-            section_base = f"{base_url}/{report_filename}"
+            section_base = report_url
 
         experts_url = f"{section_base}#experts"
         grants_url  = f"{section_base}#grants"
@@ -126,6 +133,7 @@ def generate_condensed_email_html(experts_df, grants_df, events_df, csr_df, base
         # FALLBACK: Use GitHub raw link as temporary solution.  The section URLs
         # still use the dated file so they behave similarly in local tests.
         report_url = f"https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/weekly_data/{report_filename}"
+        section_base = report_url
         experts_url = f"{report_url}#experts"
         grants_url  = f"{report_url}#grants"
         events_url  = f"{report_url}#events"

@@ -10,6 +10,7 @@ import pandas as pd
 from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
+from web_report_generator import generate_full_report_html
 
 # Load environment variables from .env file
 load_dotenv()
@@ -125,12 +126,14 @@ def test_email():
             csr_df = csr_df.rename(columns={'Organization': 'Domain'})
         
         # Generate HTML email
+        report_path = generate_full_report_html(experts_df, grants_df, events_df, csr_df)
         html_content = generate_condensed_email_html(
             experts_df, 
             grants_df, 
             events_df, 
             csr_df, 
-            base_url=WEB_REPORT_BASE_URL
+            base_url=WEB_REPORT_BASE_URL,
+            report_filename=Path(report_path).name,
         )
         
         # Create email message

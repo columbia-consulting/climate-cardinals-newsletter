@@ -4,6 +4,7 @@ Quick test email sender to columbia@climatecardinals.org
 """
 
 import os
+import sys
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -11,15 +12,19 @@ from datetime import datetime
 from dotenv import load_dotenv
 import pandas as pd
 from pathlib import Path
+from web_report_generator import generate_full_report_html
 
 # Load environment variables
 load_dotenv()
 
-def send_test_to_columbia():
+def send_test_to_columbia(recipient_email=None):
     """Send test email to columbia@climatecardinals.org"""
     
     print("="*60)
-    print("📧 SENDING TEST EMAIL TO columbia@climatecardinals.org")
+    if recipient_email:
+        print(f"📧 SENDING TEST EMAIL TO {recipient_email}")
+    else:
+        print("📧 SENDING TEST EMAIL TO columbia@climatecardinals.org")
     print("="*60)
     print(f"📅 Date: {datetime.now().strftime('%Y-%m-%d %A')}")
     print(f"⏰ Time: {datetime.now().strftime('%H:%M:%S')}")
@@ -31,8 +36,8 @@ def send_test_to_columbia():
     SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
     WEB_REPORT_BASE_URL = os.getenv("WEB_REPORT_BASE_URL", "")
     
-    # Override recipient to columbia@climatecardinals.org
-    RECIPIENT_EMAIL = "columbia@climatecardinals.org"
+    # Override recipient to provided email or default to columbia@climatecardinals.org
+    RECIPIENT_EMAIL = recipient_email or "columbia@climatecardinals.org"
     
     print("\n🔍 Checking configuration...")
     
@@ -108,12 +113,14 @@ def send_test_to_columbia():
                 df.rename(columns={'Organization': 'Domain'}, inplace=True)
         
         # Generate HTML email
+        report_path = generate_full_report_html(experts_df, grants_df, events_df, csr_df)
         html_content = generate_condensed_email_html(
             experts_df, 
             grants_df, 
             events_df, 
             csr_df, 
-            base_url=WEB_REPORT_BASE_URL
+            base_url=WEB_REPORT_BASE_URL,
+            report_filename=Path(report_path).name,
         )
         
         # Create email message
@@ -160,5 +167,8 @@ def send_test_to_columbia():
         return False
 
 if __name__ == "__main__":
-    success = send_test_to_columbia()
+    recipient = None
+    if len(sys.argv) > 1:
+        recipient = sys.argv[1]
+    success = send_test_to_columbia(recipient)
     exit(0 if success else 1)

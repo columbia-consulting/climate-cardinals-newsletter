@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from web_report_generator import generate_full_report_html
 
 # Load environment variables
 load_dotenv()
@@ -55,12 +56,14 @@ def send_to_carl():
         from email_template_condensed import generate_condensed_email_html
         
         # Generate HTML email
+        report_path = generate_full_report_html(experts_df, grants_df, events_df, csr_df)
         html_content = generate_condensed_email_html(
             experts_df, 
             grants_df, 
             events_df, 
             csr_df, 
-            base_url=WEB_REPORT_BASE_URL
+            base_url=WEB_REPORT_BASE_URL,
+            report_filename=Path(report_path).name,
         )
         
         # Create email message
