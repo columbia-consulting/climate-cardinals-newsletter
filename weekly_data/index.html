@@ -95,6 +95,16 @@
             transform: translateX(5px);
         }
 
+        .extra-report {
+            display: none;
+        }
+
+        .show-more-btn {
+            border: none;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
         .footer {
             margin-top: 40px;
             padding-top: 20px;
@@ -143,12 +153,15 @@
             <a href="climate_cardinals_report_20260223.html" class="report-link">
                 📅 Week 9 - February 23, 2026
             </a>
-            <a href="climate_cardinals_report_20260216.html" class="report-link">
+            <a href="climate_cardinals_report_20260216.html" class="report-link extra-report">
                 📅 Week 8 - February 16, 2026
             </a>
-            <a href="climate_cardinals_report_20260215.html" class="report-link">
+            <a href="climate_cardinals_report_20260215.html" class="report-link extra-report">
                 📅 Week 7 - February 15, 2026
             </a>
+            <button id="toggleReportsBtn" class="btn secondary show-more-btn" data-expanded="false" onclick="toggleReports()">
+                Show 2 More Reports
+            </button>
         </div>
 
         <div class="footer">
@@ -156,6 +169,22 @@
                 Empowering the next generation of climate leaders</p>
         </div>
     </div>
+    <script>
+        function toggleReports() {
+            const btn = document.getElementById('toggleReportsBtn');
+            if (!btn) return;
+            const expanded = btn.getAttribute('data-expanded') === 'true';
+            const extraReports = document.querySelectorAll('.extra-report');
+            extraReports.forEach((el) => {
+                el.style.display = expanded ? 'none' : 'block';
+            });
+            const hiddenCount = extraReports.length;
+            btn.textContent = expanded
+                ? `Show ${hiddenCount} More Report${hiddenCount === 1 ? '' : 's'}`
+                : 'Show Fewer Reports';
+            btn.setAttribute('data-expanded', expanded ? 'false' : 'true');
+        }
+    </script>
 </body>
 
 </html>

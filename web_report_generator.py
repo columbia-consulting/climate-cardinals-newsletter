@@ -806,14 +806,25 @@ def update_index_html(output_dir="weekly_data"):
     # Get the latest report for the main button
     latest_report = reports_data[0]['filename'] if reports_data else None
     
-    # Generate report links HTML
+    # Generate report links HTML (show first N and allow expanding)
+    initial_visible_reports = 6
+    has_more_reports = len(reports_data) > initial_visible_reports
     report_links_html = ""
-    for report in reports_data:
+    for idx, report in enumerate(reports_data):
         formatted_date = report['date'].strftime("%B %d, %Y")
         week_num = report['date'].isocalendar()[1]
-        report_links_html += f'''            <a href="{report['filename']}" class="report-link">
+        extra_class = " extra-report" if idx >= initial_visible_reports else ""
+        report_links_html += f'''            <a href="{report['filename']}" class="report-link{extra_class}">
                 📅 Week {week_num} - {formatted_date}
             </a>
+'''
+
+    show_more_button_html = ""
+    if has_more_reports:
+        hidden_count = len(reports_data) - initial_visible_reports
+        show_more_button_html = f'''            <button id="toggleReportsBtn" class="btn secondary show-more-btn" data-expanded="false" onclick="toggleReports()">
+                Show {hidden_count} More Report{'s' if hidden_count != 1 else ''}
+            </button>
 '''
     
     if not report_links_html:
@@ -918,6 +929,16 @@ def update_index_html(output_dir="weekly_data"):
             transform: translateX(5px);
         }}
 
+        .extra-report {{
+            display: none;
+        }}
+
+        .show-more-btn {{
+            border: none;
+            cursor: pointer;
+            margin-top: 12px;
+        }}
+
         .footer {{
             margin-top: 40px;
             padding-top: 20px;
@@ -948,13 +969,29 @@ def update_index_html(output_dir="weekly_data"):
 
         <div id="reports" class="reports-list">
             <h3 style="color: #0a2f1f; margin-bottom: 20px;">📊 Available Reports</h3>
-{report_links_html}        </div>
+{report_links_html}{show_more_button_html}        </div>
 
         <div class="footer">
             <p>© 2026 Climate Cardinals<br>
                 Empowering the next generation of climate leaders</p>
         </div>
     </div>
+    <script>
+        function toggleReports() {{
+            const btn = document.getElementById('toggleReportsBtn');
+            if (!btn) return;
+            const expanded = btn.getAttribute('data-expanded') === 'true';
+            const extraReports = document.querySelectorAll('.extra-report');
+            extraReports.forEach((el) => {{
+                el.style.display = expanded ? 'none' : 'block';
+            }});
+            const hiddenCount = extraReports.length;
+            btn.textContent = expanded
+                ? `Show ${{hiddenCount}} More Report${{hiddenCount === 1 ? '' : 's'}}`
+                : 'Show Fewer Reports';
+            btn.setAttribute('data-expanded', expanded ? 'false' : 'true');
+        }}
+    </script>
 </body>
 
 </html>'''
