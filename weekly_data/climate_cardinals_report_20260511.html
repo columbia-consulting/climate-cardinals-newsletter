@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Cardinals - Complete Weekly Intelligence Report</title>
+    <style>
+        @import url('https://fonts.cdnfonts.com/css/fk-screamer');
+        @import url('https://fonts.cdnfonts.com/css/athletics');
+
+        body {
+            font-family: 'Athletics', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            color: #192928;
+        }
+
+        /* responsive helpers */
+        @media screen and (max-width: 800px) {
+            .header h1 {
+                font-size: 38px !important;
+                line-height: 1.1 !important;
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .header {
+            padding: 50px 40px;
+            background: linear-gradient(135deg, #3154ff 0%, #253292 100%);
+            color: #ffffff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0;
+            margin: 0;
+            background: #ff082c;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 40px 25px;
+            background: #ff082c;
+            border-right: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+        }
+
+        .stat-card:last-child {
+            border-right: none;
+        }
+
+        .stat-card:hover {
+            background: #f95208;
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 48px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 12px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .section {
+            padding: 50px 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-header {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 36px;
+            font-weight: 900;
+            color: #192928;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .section-subtitle {
+            font-family: 'Athletics', Arial, sans-serif;
+            font-size: 15px;
+            color: #666666;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .item-card {
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-left: 5px solid #ff082c;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .item-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            border-left-color: #3154ff;
+        }
+
+        .item-title {
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 20px;
+            font-weight: 900;
+            color: #192928;
+            margin: 0 0 15px 0;
+            line-height: 1.3;
+        }
+
+        .item-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            font-size: 13px;
+            color: #3154ff;
+            font-weight: 600;
+        }
+
+        .item-description {
+            font-family: 'Athletics', Arial, sans-serif;
+            font-size: 15px;
+            color: #192928;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .item-link {
+            display: inline-block;
+            background: #ff082c;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 14px 30px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .item-link:hover {
+            background: #3154ff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(49, 84, 255, 0.4);
+        }
+
+        .expert-card {
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-left: 5px solid #3154ff;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .expert-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            border-left-color: #ff082c;
+        }
+
+        .expert-name {
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 22px;
+            font-weight: 900;
+            color: #192928;
+            margin: 0 0 10px 0;
+        }
+
+        .expert-role {
+            font-family: 'Athletics', Arial, sans-serif;
+            font-size: 15px;
+            color: #666666;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .linkedin-btn {
+            display: inline-block;
+            background: #3154ff;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .linkedin-btn:hover {
+            background: #ff082c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 8, 44, 0.4);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e8f5fe 100%);
+            border: 2px dashed #9fdfff;
+            border-radius: 12px;
+            color: #192928;
+            opacity: 0.7;
+        }
+
+        .footer {
+            padding: 60px 40px;
+            background: #000000;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ff082c;
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 8, 44, 0.5);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .back-to-top:hover {
+            background: #3154ff;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 25px rgba(49, 84, 255, 0.5);
+        }
+
+        .toggle-btn {
+            display: block;
+            margin: 40px auto 0;
+            background: linear-gradient(135deg, #3154ff 0%, #253292 100%);
+            color: #ffffff;
+            border: none;
+            font-family: 'FK Screamer', Arial, sans-serif;
+            font-size: 14px;
+            font-weight: 900;
+            padding: 16px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(49, 84, 255, 0.3);
+        }
+
+        .toggle-btn:hover {
+            background: linear-gradient(135deg, #ff082c 0%, #f95208 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 8, 44, 0.4);
+        }
+
+        .toggle-btn:active {
+            transform: translateY(0);
+        }
+
+        .item-hidden {
+            display: none;
+        }
+
+        /* Print styles - show all content when printing */
+        @media print {
+            .item-hidden {
+                display: block !important;
+            }
+
+            .toggle-btn,
+            .back-to-top {
+                display: none !important;
+            }
+
+            .item-card,
+            .expert-card {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div
+                style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 11px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; color: #ffffff; margin-bottom: 20px; opacity: 0.9;">
+                Complete Weekly Intelligence • Issue #20</div>
+            <h1
+                style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 56px; font-weight: 900; color: #ffffff; margin: 0 0 15px 0; line-height: 1; letter-spacing: -2px;">
+                🌍 CLIMATE CARDINALS</h1>
+            <p
+                style="font-family: 'Athletics', Arial, sans-serif; font-size: 20px; color: #ffffff; margin: 0 0 30px 0; opacity: 0.95; font-weight: 600;">
+                Complete
+                Weekly Intelligence Report</p>
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; padding-top: 20px; padding-bottom: 10px; border-top: 2px solid rgba(255,255,255,0.3);">
+                <div
+                    style="font-family: 'Athletics', Arial, sans-serif; font-size: 15px; font-weight: 700; color: #ffffff; opacity: 0.95;">
+                    📅 May 11, 2026</div>
+                <div
+                    style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 11px; color: #ffffff; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; opacity: 0.9;">
+                    Complete Dataset</div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <a href="#experts" class="stat-card">
+                    <div class="stat-number">23</div>
+                    <div class="stat-label">Climate Experts</div>
+                </a>
+                <a href="#grants" class="stat-card">
+                    <div class="stat-number">17</div>
+                    <div class="stat-label">Grant Opportunities</div>
+                </a>
+                <a href="#events" class="stat-card">
+                    <div class="stat-number">53</div>
+                    <div class="stat-label">Upcoming Events</div>
+                </a>
+                <a href="#reports" class="stat-card">
+                    <div class="stat-number">47</div>
+                    <div class="stat-label">ESG Reports</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="section" id="experts">
+            <div class="section-header">
+                <h2 class="section-title">👤 Climate Experts</h2>
+                <p class="section-subtitle">Climate leaders and decision-makers actively seeking partnerships and collaboration</p>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Richard Alden F.</div>
+                <div class="expert-role">Investigative Journalism Nonprofit Board ...</div>
+                <a href="https://www.linkedin.com/in/richardaldenfeldon" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Helen Clarkson OBE</div>
+                <div class="expert-role">Chief Executive Officer at Climate Group ...</div>
+                <a href="https://uk.linkedin.com/in/helenclarkson" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Sophia Kianni</div>
+                <div class="expert-role">Founder of Phia˚𖥔, Climate Cardinals... | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/sophiakianni" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Zhihan Wang</div>
+                <div class="expert-role">Seaside Sustainability (nonprofit) | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/zhihan-wang-46a131290" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Apoorva Rai</div>
+                <div class="expert-role">Seaside Sustainability (nonprofit) | LinkedIn</div>
+                <a href="https://au.linkedin.com/in/apoorva-rai0501" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Toshan Tamhane</div>
+                <div class="expert-role">United Kingdom | Professional Profile | LinkedIn</div>
+                <a href="https://uk.linkedin.com/in/toshan-tamhane-b3b641" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Davina Pearson</div>
+                <div class="expert-role">Senior Program Director, Global ... - LinkedIn</div>
+                <a href="https://www.linkedin.com/in/davina-pearson-1bb02973" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Ulrich Stephane Tchiegdjo Tamo</div>
+                <div class="expert-role">Founder & Executive Director ...I am thrilled to announce my new role as Executive Director ...Adam Sacks - Biodiversity for a Livable Climate | LinkedIn</div>
+                <a href="https://ca.linkedin.com/in/tamostephane" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Adam Sacks</div>
+                <div class="expert-role">Biodiversity for a Livable Climate | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/adam-sacks-28840b84" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Peggy Brannigan</div>
+                <div class="expert-role">Business Council on Climate Change (BC3) | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/peggybrannigan/" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Heather Zanoni</div>
+                <div class="expert-role">Head of Sustainability and ESG Director | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/heatherzanoni/" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Robert ter Kuile</div>
+                <div class="expert-role">Chief Sustainability Officer - McKesson</div>
+                <a href="https://www.linkedin.com/in/robert-ter-kuile/" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Erik Hansen</div>
+                <div class="expert-role">Workday | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/erikdhansen" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Bianca Pasternack</div>
+                <div class="expert-role">Climate Changemakers | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/bpasternack" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Bruce Nilles</div>
+                <div class="expert-role">Executive Director - Climate Imperative | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/bruce-nilles-a4a20547" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Giana Amador</div>
+                <div class="expert-role">Absolute Climate | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/gianaamador/" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Sean Kosofsky</div>
+                <div class="expert-role">The Nonprofit Fixer, Sean Kosofsky | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/kosofsky/" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Erin Bennett</div>
+                <div class="expert-role">Sustainability consultant fellow - Seaside... | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/erin-bennett7143" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Evan Hou</div>
+                <div class="expert-role">Seaside Sustainability (nonprofit) | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/ekhou" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Jessica Hyman</div>
+                <div class="expert-role">Chief Sustainability Officer at Atlassian | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/jessica-hyman-74baa919/" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Christine Daugherty, Ph.D., J.D.</div>
+                <div class="expert-role">Head of Sustainability at Conagra | Board of Directors | Agribusiness and Food Production Advisor | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/christine-daugherty/" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Paula Pagniez</div>
+                <div class="expert-role">Howden, Executive Director, Climate Risk and Resilience | Former FEMA National Advisory Council Member | Former United Nations' UNDRR ARISE Global Board Director | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/ppagniez/" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+
+            <div class="expert-card">
+                <div class="expert-name">Adam Parris</div>
+                <div class="expert-role">ICF | LinkedIn</div>
+                <a href="https://www.linkedin.com/in/adam-parris-b048b96/" class="linkedin-btn">View LinkedIn Profile</a>
+            </div>
+</div>
+        <div class="section" id="grants">
+            <div class="section-header">
+                <h2 class="section-title">💰 Grants & Funding</h2>
+                <p class="section-subtitle">Active grant programs and funding opportunities to accelerate climate initiatives</p>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Grants - The National Environmental Education Foundation (NEEF)</div>
+                <div class="item-meta"><span class="meta-item">🌐 neefusa.org</span></div>
+                <div class="item-description">NEEF administers grant programs that support environmental education and community-based environmental work across the United States. Through partnerships with funders and community organizations, we help bring learning, stewardship, and engagement opportunities to communities nationwide.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www.neefusa.org/what-we-do/grants/grants" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Apply for Seeds of Sustainability Grants 2026... - De Round Table</div>
+                <div class="item-meta"><span class="meta-item">🌐 deroundtable.com</span></div>
+                <div class="item-description">Final Thoughts. The Seeds of Sustainability Grants 2026 is a powerful opportunity for changemakers who want to protect the environment and uplift communities.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://deroundtable.com/apply-for-seeds-of-sustainability-grants-2026-get-up-to-10000-funding-for-environmental-projects/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Clean the Sky - Sustainable Grant Programs</div>
+                <div class="item-meta"><span class="meta-item">🌐 cleanthesky.com</span></div>
+                <div class="item-description">Sustainable Grant Programs - Discovery Education and NEEF Partner on 2025–2026 Greening STEM Grants: The Environmental Education Initiative, created by Discovery Education in...</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www.cleanthesky.com/innovation/discovery-education" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Community Resilience Grant Programs - SVCE</div>
+                <div class="item-meta"><span class="meta-item">🌐 svcleanenergy.org</span></div>
+                <div class="item-description">Discover how SVCE grants support resilience in the face of climate change. Learn how Silicon Valley Clean Energy benefits our community.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://svcleanenergy.org/community-resilience/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Community Resilience Centers - Strategic Growth Council</div>
+                <div class="item-meta"><span class="meta-item">🌐 sgc.ca.gov</span></div>
+                <div class="item-description">November 20, 2025 - Grant Programs · Community Resilience Cent... SGC’s CRC program will fund new construction and upgrades of neighborhood-level resilience centers to provide shelter and resources during climate and other emergencies.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://sgc.ca.gov/grant-programs/crc/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Resilience Funding Opportunities | COPEWELL Partners | Composite of Post-Event Well-being</div>
+                <div class="item-meta"><span class="meta-item">🌐 copewellmodel.org</span></div>
+                <div class="item-description">The COPEWELL model is listed in the Public Health Emergency Preparedness and Response Capabilities Suggested Resouces-2018 to support Capability 1-Community Preparedness and Capability 2- Community Recovery, and can be used to conduct PHEP Jurisdictional Risk Assessments · Timeline: Annual funding, FY2022 Grant Deadline was March 22, 2022 ... Description: CDC’s Climate-Ready States and Cities Initiative (CRSCI) is helping grant recipients from 11 jurisdictions use the five-step Building Resilience Against Climate Effects (BRACE) framework to identify likely climate impacts in their communities, potential health effects associated with these impacts, and their most at-risk populations and locations.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://copewellmodel.org/copewell-in-practice/funding-opportunities" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Adaptation Planning Grant Program - Office of Land Use and Climate Innovation</div>
+                <div class="item-meta"><span class="meta-item">🌐 lci.ca.gov</span></div>
+                <div class="item-description">The program provides flexible funding to meet multi-sector/issue planning needs that intersect with climate risks, including but not limited to land use, transportation, economic, housing, natural resource management, public infrastructure, and hazard mitigation issues.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://lci.ca.gov/climate/icarp/grants/adaptation-planning-grant.html" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Community Resilience Grant Application Form Template | Paperform</div>
+                <div class="item-meta"><span class="meta-item">🌐 paperform.co</span></div>
+                <div class="item-description">Ready to fund resilient communities? Start with Paperform's Community Resilience Grant Application template and turn good intentions into measurable impact.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://paperform.co/templates/community-resilience-grant-application/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Federal Financial Assistance Programs for Resilience Activities | Department of Energy</div>
+                <div class="item-meta"><span class="meta-item">🌐 energy.gov</span></div>
+                <div class="item-description">3 weeks ago - This interactive matrix compiled by the U.S. Department of Energy (DOE) is a list of selected federal financial assistance programs that are available to assist state and local, tribal and territorial governments in natural hazard mitigation and energy resilience activities.2 · The funding information can be sorted by the following categories: The sponsoring federal organization · The type of financial assistance (e.g., grant, loan, or cooperative agreement) Eligible recipients (e.g., government entity, nonprofit, or for-profit corporation) Disaster declaration required.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www.energy.gov/scep/slsc/federal-financial-assistance-programs-resilience-activities" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Regional Resilience Planning and Implementation Grant Program - Office of Land Use and Climate Innovation</div>
+                <div class="item-meta"><span class="meta-item">🌐 lci.ca.gov</span></div>
+                <div class="item-description">The ICARP Regional Resilience Planning and Implementation Grant Program (Regional Resilience Grant Program, or RRGP) funds public entities, California Native American tribes, Community-Based Organizations, and academic institutions that form regional partnerships to plan and implement projects that advance climate resilience and respond to the greatest climate risks in their regions.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://lci.ca.gov/climate/icarp/grants/regional-resilience-grant.html" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">6 Strategies for Designing Impactful and Sustainable Grant Programs</div>
+                <div class="item-meta"><span class="meta-item" style="background: #ffe8ec; padding: 6px 12px; border-radius: 6px; color: #ff082c; font-weight: 700;">⏰ Rolling deadline</span><span class="meta-item">🌐 erigrants.com</span></div>
+                <div class="item-description">Build sustainable grant programs with feedback loops, strategic partnerships, continuous data, and digital tools that support lasting community impact.</div>
+                
+                <a href="https://www.erigrants.com/post/6-strategies-for-designing-impactful-and-sustainable-grant-programs" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Leadership in Community Resilience - National League of Cities</div>
+                <div class="item-meta"><span class="meta-item">🌐 nlc.org</span></div>
+                <div class="item-description">The Leadership in Community Resilience (LCR) grant program supports and enhances local capacity among elected leaders and staff, communities, and community-based organizations as...</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www.nlc.org/initiative/leadership-in-community-resilience-program-application/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Resiliency Grant Program | Internet Society Foundation</div>
+                <div class="item-meta"><span class="meta-item">🌐 isocfoundation.org</span></div>
+                <div class="item-description">Grantee Eligibility & Compliance Guidance.Resiliency Grant Program. This program is no longer accepting applications.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www.isocfoundation.org/grant-programme/resiliency-grant-program/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Sustainability Research Grants | US EPA</div>
+                <div class="item-meta"><span class="meta-item">🌐 epa.gov</span></div>
+                <div class="item-description">May 20, 2025 - Sustainability research grants support the research and development a variety of methods, tools, guidance and programs that further the application of sustainability within decision-making.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://www.epa.gov/research-grants/sustainability-research-grants" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Environmental Justice Grant Program | Colorado Department of Public Health and Environment</div>
+                <div class="item-meta"><span class="meta-item">🌐 cdphe.colorado.gov</span></div>
+                <div class="item-description">The Environmental Justice Advisory Board awarded over $3 million through the third cycle of the Colorado Environmental Justice Grant Program to support projects that improve environmental health across the state.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://cdphe.colorado.gov/ej/grants" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate Adaptation Grant Application Form Template | Paperform</div>
+                <div class="item-meta"><span class="meta-item">🌐 paperform.co</span></div>
+                <div class="item-description">This Climate Adaptation Grant Application template is designed to help you submit a comprehensive, compelling proposal that demonstrates your understanding of climate risks...</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://paperform.co/templates/climate-adaptation-grant-application/" class="item-link">View Grant Details →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Funding & Building Capacity - U.S. Climate Resilience Toolkit</div>
+                <div class="item-meta"><span class="meta-item">🌐 toolkit.climate.gov</span></div>
+                <div class="item-description">Communities are often eligible to apply for grant funding from federal, state, non-profit, or private entities for resilience-building projects. They might also be able to raise funds for resilience actions through taxes or fees.</div>
+                <div style="font-size: 13px; color: #666; margin-top: 12px; font-style: italic;">💡 Visit grant page for deadline and eligibility details</div>
+                <a href="https://toolkit.climate.gov/funding-capacity" class="item-link">View Grant Details →</a>
+            </div>
+</div>
+        <div class="section" id="events">
+            <div class="section-header">
+                <h2 class="section-title">🎤 Events & Conferences</h2>
+                <p class="section-subtitle">Premier gatherings where climate leaders convene to share insights and forge partnerships</p>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Mumbai Climate Week 2026: Where Hope Met Action! - The Voices</div>
+                <div class="item-meta"><span class="meta-item">🌐 medialit.in</span></div>
+                <div class="item-description">While individuals feel their actions have a lesser significant impact in bringing about positive change, the Mumbai Climate Week (MCW) held in February 2026 took a closer look at issues like...</div>
+                <a href="https://medialit.in/thevoices/mumbai-climate-week-2026-where-hope-meets-action/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Avid learning sparks climate–food dialogue ahead of... | Energy Asia</div>
+                <div class="item-meta"><span class="meta-item">🌐 energyasia.co.in</span></div>
+                <div class="item-description">With Mumbai Climate Week 2026 on the horizon, the conversation underscored a clear message: transforming food systems is no longer optional, but central to safeguarding livelihoods...</div>
+                <a href="https://energyasia.co.in/sustainability/avid-learning-sparks-climate-food-dialogue-ahead-of-mumbai-climate-week-2026/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">PH hosting of ASEAN Climate Week 2026 to advance... - PTV News</div>
+                <div class="item-meta"><span class="meta-item">🌐 ptvnews.ph</span></div>
+                <div class="item-description">The ASEAN Climate Week 2026 moreover, aims to collate opinions from all member states and condense these into a collective voice at the 2026 United Nations Climate Change...</div>
+                <a href="https://ptvnews.ph/ph-hosting-of-asean-climate-week-2026-to-advance-integrated-regional-response-on-climate-change/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Celebrating a Shared Commitment to Climate | Dartmouth</div>
+                <div class="item-meta"><span class="meta-item">🌐 home.dartmouth.edu</span></div>
+                <div class="item-description">The Dartmouth Climate Collaborative presented the first-ever Dartmouth Climate Week in April. 5/1/2026. Share this.</div>
+                <a href="https://home.dartmouth.edu/news/2026/05/celebrating-shared-commitment-climate" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">home 2026 – Resilience Symposium</div>
+                <div class="item-meta"><span class="meta-item">🌐 resiliencesymposium.com</span></div>
+                <div class="item-description">By integrating urban infrastructure, natural ecosystems, and socioeconomic dynamics, UDTs are positioned as a transformative technology that aids disaster response and enhances climate resilience.</div>
+                <a href="https://resiliencesymposium.com/home-2026/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Symposium 2026 | LIR Mainz - Leibniz-Institut für ...HOME [isgurp2026.org]schedule-2026 – Resilience Symposiumcontact us 2026 – Resilience SymposiumResilience Symposiumcall-2026 – Resilience SymposiumSymposium 2026 | LIR Mainz - Leibniz-Institut für ResilienzforschungSymposium 2026 | LIR Mainz - Leibniz-Institut für ResilienzforschungHOME [isgurp2026.org]</div>
+                <div class="item-meta"><span class="meta-item" style="background: #e8f4ff; padding: 6px 12px; border-radius: 6px; color: #0066cc; font-weight: 700;">📅 In 4 months</span><span class="meta-item">🗓️ 30 September 2026</span><span class="meta-item">🌐 lir-mainz.de</span></div>
+                <div class="item-description">September 27-29, 2023 Mainz/Germany (30 min. from Frankfurt International Airport)The symposium takes place as an IN-PERSONmeeting. See full list on lir-mainz.de Covers latest developments and breakthroughs in the science of stress resilience, both in animal models and in human studies. Since 2015, the symposium is the most important gathering of the international research community and has shaped the field and initiated many important debates. Examples? Seen first at the International Symposium on Resilien... See full list on lir-mainz.de Erin Calipari, Vanderbilt Annegret Falkner, Princeton Claire Gillan, Trinity Quentin Huys, University College London Frank Infurna, Arizona State Raffael Kalisch, LIR Göran Köber, Freiburg Sarah Lowe, Yale Adam Maihofer, UCSD Roberto Mediavilla Torres, UA Madrid Robin Murray, UCL Papoula Petri-Romão, LIR Jennifer Stevens, Emory Christiaan Vinkers, ... See full list on lir-mainz.de The symposium is organized yearly byInternational Resilience Alliance (intresa), the EU Horizon project DynaMORE, Leibniz Institute for Resilience Research and University Medical Center Mainz. We are part of the Rhine-Main Neuroscience Network (rmn²). See full list on lir-mainz.de 2026) will be held at Hiroshima University, Japan, on 27–30 September 2026. The symposium aims to share and advance innovative strategies grounded in geotechnical science and engineering to mitigate natural hazards, support sustainable recovery, and build resilient cities and communities. UF Jacksonville, 801 W Bay Street. Paper Track 3: Public Participation & Ethics in UDTs. (Pause for morning coffee break from 10h15 to 10h30) Register now for the 2026 edition of Digital Twins for Resilient Urban Environments (DTRUE) to discuss technologies to advance the sustainability of cities across scales, with a focus on climate change resilience and adaptation. Register now for the 2026 edition of Digital Twins for Resilient Urban Environments (DTRUE) to discuss technologies to advance the sustainability of cities across scales, with a focus on climate change resilience and adaptation. Digital twin integration in urban design studios. Simulation platforms (e.g., Unreal Engine, Unity, Omniverse) When is the resilience Symposium 2026? September 23-25, 2026 Mainz, Germany - Get your ticket here! September 22: Free Satellite Methods Workshop "Quantification of Resilience in Humans" - Register here! Since 2015, the symposium has been gathering the international resilience research community and shaped the field. Examples? See here. The symposium takes place as an in-person meeting. What is the International Resilience Research Symposium? Since 2015, the symposium has been gathering the international resilience research community and shaped the field. Examples? See here. The symposium takes place as an in-person meeting. Leibniz Institute for Resilience Research ECNP Resilience Network ERA-NET-Neuron project PHASR-PP GSRNet Global Stress and Resilience Network What is geotechnical Science & Engineering Symposium 2026? 2026) will be held at Hiroshima University, Japan, on 27–30 September 2026. The symposium aims to share and advance innovative strategies grounded in geotechnical science and engineering to mitigate natural hazards, support sustainable recovery, and build resilient cities and communities.</div>
+                <a href="https://lir-mainz.de/resilience-symposium" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">HOME [isgurp2026.org]</div>
+                <div class="item-meta"><span class="meta-item" style="background: #e8f4ff; padding: 6px 12px; border-radius: 6px; color: #0066cc; font-weight: 700;">📅 In 4 months</span><span class="meta-item">🗓️ 30 September 2026</span><span class="meta-item">🌐 isgurp2026.org</span></div>
+                <div class="item-description">2026) will be held at Hiroshima University, Japan, on 27–30 September 2026. The symposium aims to share and advance innovative strategies grounded in geotechnical science and engineering to mitigate natural hazards, support sustainable recovery, and build resilient cities and communities.</div>
+                <a href="https://isgurp2026.org/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">conferenceineurope.org</div>
+                <div class="item-meta"><span class="meta-item">🌐 conferenceineurope.org</span></div>
+                <div class="item-description">International Conference on Environment and Natural Science (ICENS).</div>
+                <a href="https://www.conferenceineurope.org/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate events 2026: Conferences, summits and more</div>
+                <div class="item-meta"><span class="meta-item">🌐 thinklandscape.globallandscapesforum.org</span></div>
+                <div class="item-description">1 month ago - Antalya, Turkey, will host the 2026 UN Climate Change Conference (COP31).</div>
+                <a href="https://thinklandscape.globallandscapesforum.org/101100/climate-events-2026/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Sustainability conferences in the United States in 2026 - Sustainability Online</div>
+                <div class="item-meta"><span class="meta-item">🌐 sustainabilityonline.net</span></div>
+                <div class="item-description">1 week ago - Event: TSC Summit 2026 Date(s): March 17–19, 2026 Location: Tempe, AZ Website: ... Organised by the Sustainability Consortium, the TSC Summit will gather sustainability and finance leaders to build bridges between environmental and financial ...</div>
+                <a href="https://sustainabilityonline.net/news/sustainability-conferences-in-the-united-states/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Top 10 Sustainability and Climate Tech Summits in 2026</div>
+                <div class="item-meta"><span class="meta-item">🌐 renewableenergyconference.org</span></div>
+                <div class="item-description">Jul 15, 2025 · Below is a curated list of the Top 10 Sustainability and Climate Tech Conferences & Summits to attend in 2026, covering the latest innovations shaping a net-zero future.</div>
+                <a href="https://www.renewableenergyconference.org/blog/sustainability-and-climate-tech-summits-2026.html" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2026 Sustainability Summit - Sustainable Jersey</div>
+                <div class="item-meta"><span class="meta-item">🌐 sustainablejersey.com</span></div>
+                <div class="item-description">The New Jersey Sustainability Summit brings together the leaders and innovators driving change across our state. This energizing one-day gathering uplifts the people, projects, and ideas shaping a more sustainable New Jersey—while offering clear, practical lessons for what comes next.</div>
+                <a href="https://www.sustainablejersey.com/events/2026-sustainability-summit/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">About the Climate Weeks | UNFCCC</div>
+                <div class="item-meta"><span class="meta-item" style="background: #e8f4ff; padding: 6px 12px; border-radius: 6px; color: #0066cc; font-weight: 700;">📅 In 4 months</span><span class="meta-item">🗓️ 11 September 2026</span><span class="meta-item">🌐 unfccc.int</span></div>
+                <div class="item-description">Climate Week 4 will be held in Baku, Azerbaijan, from 7 - 11 September 2026</div>
+                <a href="https://unfccc.int/topics/climate-weeks" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Environmental Conferences 2026/2027/2028 - Conference Index</div>
+                <div class="item-meta"><span class="meta-item">🌐 conferenceindex.org</span></div>
+                <div class="item-description">Environmental Conferences 2026 2027 2028 is for the researchers, scientists, scholars, engineers, academic, scientific and university practitioners to present research activities that might want to attend events, meetings, seminars, congresses, workshops, summit, and symposiums.</div>
+                <a href="https://conferenceindex.org/conferences/environmental" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Upcoming Environment Conferences in USA 2026</div>
+                <div class="item-meta"><span class="meta-item" style="background: #e8f4ff; padding: 6px 12px; border-radius: 6px; color: #0066cc; font-weight: 700;">📅 In 1 month</span><span class="meta-item">🗓️ 26 Jun 2026</span><span class="meta-item">🌐 allconferencealert.com</span></div>
+                <div class="item-description">13 hours ago - Whether you are a student, researcher, professor, or industry professional, these conferences in USA during 2026 support learning, career growth, and international exposure in the field of Environment. View more ... May 2026 Jun 2026 Jul 2026 Aug 2026 Sep 2026 Oct 2026 Nov 2026 Dec 2026 Jan 2027 ...</div>
+                <a href="https://www.allconferencealert.com/usa/environment" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Iloilo City hosts Sustainability Summit 2026</div>
+                <div class="item-meta"><span class="meta-item">🌐 iloilotoday.com</span></div>
+                <div class="item-description">A major gathering of sustainability leaders and advocates is set to take place in Iloilo as the Sustainability Summit Iloilo 2026 unfolds on April 28–29 at Solana Premiere...</div>
+                <a href="https://www.iloilotoday.com/sustainability-summit-2026/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate Week - Home</div>
+                <div class="item-meta"><span class="meta-item">🌐 climateweeknyc.org</span></div>
+                <div class="item-description">It’s exactly why Climate Week NYC was set up, and why it’ll return from September 20–27, 2026.</div>
+                <a href="https://www.climateweeknyc.org/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Resilience 365 Conference 2026</div>
+                <div class="item-meta"><span class="meta-item">🌐 resilience.miami.edu</span></div>
+                <div class="item-description">We hosted our second annual two-day Resilience 365 Conference on March 17-18, 2026 during Miami Climate Week to bring together thought leaders, researchers, and practitioners to catalyze action related to three primary themes:</div>
+                <a href="https://resilience.miami.edu/news-and-events/conferences-and-symposia/2026-resilience365-conference/index.html" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Verdantas is sponsoring and attending the NECA 2026 Environmental...</div>
+                <div class="item-meta"><span class="meta-item">🌐 linkedin.com</span></div>
+                <div class="item-description">Registration is now OPEN for the 2026 Environmental Conference. Join us on 4/16 in Concord, NH, at the McAuliffe-Shepard Discovery Center for discussions on the environmental costs and benefits of meeting our energy needs.</div>
+                <a href="https://www.linkedin.com/posts/tom-holden-94483a5b_verdantas-is-sponsoring-and-attending-the-activity-7434617041241878528-3-_4" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">COP26: What was agreed at the Glasgow climate conference?</div>
+                <div class="item-meta"><span class="meta-item">🌐 bbc.com</span></div>
+                <div class="item-description">COP stands for "Conference of the Parties", and the one in Glasgow was the 26th annual summit. Ahead of it, 200 countries were asked for their plans to cut emissions by 2030.</div>
+                <a href="https://www.bbc.com/news/science-environment-56901261" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">ASEAN-EU Sustainability Summit 2026 › | SWITCH-Asia</div>
+                <div class="item-meta"><span class="meta-item">🌐 switch-asia.eu</span></div>
+                <div class="item-description">The ASEAN-EU Sustainability Summit 2026 is a premier regional platform designed to catalyse bold, cross-sectoral action towards Southeast Asia's green and inclusive transition.</div>
+                <a href="https://www.switch-asia.eu/event/2026/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Vision to Action: AIA Virginia COTE 2026 Sustainability Summit - AIA...</div>
+                <div class="item-meta"><span class="meta-item" style="background: #e8f4ff; padding: 6px 12px; border-radius: 6px; color: #0066cc; font-weight: 700;">📅 In 2 weeks</span><span class="meta-item">🗓️ May 28, 2026</span><span class="meta-item">🌐 aiava.org</span></div>
+                <div class="item-description">Join us for the AIA Virginia COTE 2026 Sustainability Summit on Thursday, May 28, 2026 in Richmond, VA. The Virginia COTE Sustainability Summit brings together design...</div>
+                <a href="https://www.aiava.org/event/from-vision-to-action-aia-virginia-cote-2026-sustainability-summit/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">CPHI Milan 2026: Shaping Pharma's Future</div>
+                <div class="item-meta"><span class="meta-item">🌐 cphi.com</span></div>
+                <div class="item-description">Explore pass options. Sustainability Summit. PLANNING. 2026 Conference agenda. Call for speakers. 2026 Leadership Summit. Book your hotel.</div>
+                <a href="https://www.cphi.com/europe/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Sustainability_Summit_2026</div>
+                <div class="item-meta"><span class="meta-item">🌐 jmi.ac.in</span></div>
+                <div class="item-description">National Conference on Environmental Sustainability in the 21st Century: Science, society and solutions. Earth day. 22ND april - 23RD april, 2026.</div>
+                <a href="https://www.jmi.ac.in/upload/EventDetail/des_conference_2026april22_23_brochure.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate Week NYC returns September 2026 | Climate Week</div>
+                <div class="item-meta"><span class="meta-item">🌐 climateweeknyc.org</span></div>
+                <div class="item-description">November 27, 2025 - That’s why Climate Week NYC returns to New York City, from September 20 – 27, 2026.</div>
+                <a href="https://www.climateweeknyc.org/news/climate-week-nyc-returns-september-2026" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">New York Climate Week: A Turning Point for Global Climate Ambition - Climate Action</div>
+                <div class="item-meta"><span class="meta-item">🌐 climateaction.org</span></div>
+                <div class="item-description">September 11, 2025 - Here, climate ambition must translate into practical decisions—how to finance the transition, how to support adaptation, and how to unlock inclusive growth across developed and emerging markets alike.</div>
+                <a href="https://www.climateaction.org/news/new-york-climate-week-a-turning-point-for-global-climate-ambition" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Resilience Symposiums 2026/2027/2028 - Conference Index</div>
+                <div class="item-meta"><span class="meta-item">🌐 conferenceindex.org</span></div>
+                <div class="item-description">Resilience Symposiums 2026 2027 2028 is for the researchers, scientists, scholars, engineers, academic, scientific and university practitioners to present research activities that might...</div>
+                <a href="https://conferenceindex.org/symposiums/resilience" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Bainbridge Island Environmental Conference 2026: Rising Seas...</div>
+                <div class="item-meta"><span class="meta-item">🌐 bi-landtrust.org</span></div>
+                <div class="item-description">The 2026 Bainbridge Island Environmental Conference brings the community together to explore what sea level rise means for our island and how we can respond.</div>
+                <a href="https://www.bi-landtrust.org/biec/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Please stop by to see Verdantas at the NECA Environmental...</div>
+                <div class="item-meta"><span class="meta-item">🌐 linkedin.com</span></div>
+                <div class="item-description">Announcing Panel IV at the 2026 Environmental Conference on 4/16 in Concord, NH! This seasoned group will discuss transforming brownfields and other underutilized property into clean energy assets through renewable/solar development, promoting land reuse...</div>
+                <a href="https://www.linkedin.com/posts/tom-holden-94483a5b_please-stop-by-to-see-verdantas-at-the-neca-activity-7444442632522608640-hxUC" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Mosambi Climate Conference</div>
+                <div class="item-meta"><span class="meta-item">🌐 mosambiclimateconference.com</span></div>
+                <div class="item-description">Mosambi Climate Conference 2026 has officially concluded. A big thank you to everyone who joined us.</div>
+                <a href="https://mosambiclimateconference.com/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Flooring Sustainability Summit announces 2026 keynote speakers - Floor Covering News</div>
+                <div class="item-meta"><span class="meta-item">🌐 fcnews.net</span></div>
+                <div class="item-description">18 hours ago - The Flooring Sustainability Summit named George Bandy Jr. and Cheryl Durst as 2026 keynote speakers for the Washington, D.C. event.</div>
+                <a href="https://www.fcnews.net/2026/05/flooring-sustainability-summit-announces-2026-keynote-speakers/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Miami Climate Week March 14-21, 2026</div>
+                <div class="item-meta"><span class="meta-item">🌐 miamiclimate365.com</span></div>
+                <div class="item-description">Miami Climate Week Returns March 14-22, 2026. The seas are rising. It’s getting hotter. Let's do something.</div>
+                <a href="https://www.miamiclimate365.com/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">The Tourism Resilience Symposium 2026 — Guidelines on Tourism...</div>
+                <div class="item-meta"><span class="meta-item">🌐 mlit.go.jp</span></div>
+                <div class="item-description">The Japan Tourism Agency held the “Tourism Resilience Symposium 2026” with the aim of further promoting tourism resilience.</div>
+                <a href="https://www.mlit.go.jp/kankocho/en/topics07_00001.html" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">What's Happening | Growing Resiliency Symposium</div>
+                <div class="item-meta"><span class="meta-item">🌐 adriandominicans.org</span></div>
+                <div class="item-description">The Growing Resiliency Symposium focused on two areas that the Adrian Dominican Sisters committed themselves to in their 2016 General Chapter...</div>
+                <a href="https://adriandominicans.org/News/Tag/growing-resiliency-symposium" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">At Mumbai Climate Week, solutions that can reach millions of people</div>
+                <div class="item-meta"><span class="meta-item">🌐 vitalsigns.edf.org</span></div>
+                <div class="item-description">Mumbai Climate Week 2026 was the first major global climate event in India, a nation of 1.4 billion people that is currently, although not historically, the world’s third-largest source of...</div>
+                <a href="https://vitalsigns.edf.org/story/mumbai-climate-week-solutions-can-reach-millions-people" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">LA Climate Week 2026 | Designing Our Climate Future... - YouTube</div>
+                <div class="item-meta"><span class="meta-item">🌐 youtube.com</span></div>
+                <div class="item-description">Los Angeles is a city of makers, storytellers, planners, and neighbors. This is our moment to design the future — together.LA Climate Week (April 8–15, 2026)...</div>
+                <a href="https://www.youtube.com/watch?v=BkEVTuv_bww" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">This Week in Climate and Sustainability</div>
+                <div class="item-meta"><span class="meta-item">🌐 linkedin.com</span></div>
+                <div class="item-description">Climate Week 2026 (Climate Change & Sustainability Conference) – Date: June 18–19, 2026 Location: London, United Kingdom (climateweek.thepeopleevents.com).</div>
+                <a href="https://www.linkedin.com/pulse/week-climate-sustainability-synergy-international-net-89gjf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Home - London Climate Action Week</div>
+                <div class="item-meta"><span class="meta-item">🌐 londonclimateactionweek.org</span></div>
+                <div class="item-description">London Climate Action Week 2026 will be opening for registration in the spring.</div>
+                <a href="https://www.londonclimateactionweek.org/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Georgia Southern Commons - GS4 Student Scholars Symposium: Forging Resilience Pathways: Mobilizing Community Capitals Through Governance and Collective Action</div>
+                <div class="item-meta"><span class="meta-item">🌐 digitalcommons.georgiasouthern.edu</span></div>
+                <div class="item-description">Woodard, Taylor and Ayittah, Selina, "Forging Resilience Pathways: Mobilizing Community Capitals Through Governance and Collective Action" (2026). GS4 Student Scholars Symposium.</div>
+                <a href="https://digitalcommons.georgiasouthern.edu/research_symposium/2026/2026/23/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Resilience Conference | London, UK</div>
+                <div class="item-meta"><span class="meta-item">🌐 resilienceconference.io</span></div>
+                <div class="item-description">Produced by Resilience Media, the event connects NATO partners, government leaders, VCs, and founders to chart the path of modern defence innovation. Don’t miss your chance to be in the room where the future is being built.</div>
+                <a href="https://www.resilienceconference.io/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">ResilienceCon - Life Paths Research Center</div>
+                <div class="item-meta"><span class="meta-item">🌐 lifepathsresearch.org</span></div>
+                <div class="item-description">December 9, 2025 - ResilienceCon 2026 Keynote Speakers · 2026 Keynote Speaker – Jennifer M. Gómez · 2026 Keynote Speaker – Thomas R. Simon · 2026 Keynote Speaker – Christopher Thornton · ResilienceCon 2026 Agenda · 2026 Call for Submissions · Submit to ResilienceCon 2026 ·</div>
+                <a href="https://lifepathsresearch.org/resiliencecon/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">UN Climate Change Conference - Antalya, November 2026 - UNFCCC</div>
+                <div class="item-meta"><span class="meta-item" style="background: #e8f4ff; padding: 6px 12px; border-radius: 6px; color: #0066cc; font-weight: 700;">📅 In 6 months</span><span class="meta-item">🗓️ 20 November 2026</span><span class="meta-item">🌐 unfccc.int</span></div>
+                <div class="item-description">COP 31 will be held in Antalya, Türkiye, from 9 to 20 November 2026. More information will be provided soon. In the lead-up, the COP 30 Presidency and the incoming COP 31 Presidency are working together to foster an open, transparent and inclusive process, through regular engagement with Parties and observers throughout the year.</div>
+                <a href="https://unfccc.int/cop31" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Sustainability Summit - new trade fair and conference for sustainability in business</div>
+                <div class="item-meta"><span class="meta-item">🌐 sustainabilitysummit.eu</span></div>
+                <div class="item-description">It brings together top-notch speakers, experts, decision-makers, innovators and exhibitors to actively shape the sustainable transformation in businesses. Live in Hamburg on June 24 and 25, 2026...</div>
+                <a href="https://sustainabilitysummit.eu/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Sustainability Summit 2026 | Startup City Hamburg</div>
+                <div class="item-meta"><span class="meta-item">🌐 startupcity.hamburg</span></div>
+                <div class="item-description">Wednesday, 6/24/2026 – Thursday, 6/25/2026 · Onsite · The Sustainability Summit is the new trade fair and conference for sustainability in business, where leading sustainability executives from small to large companies meet to discuss the ...</div>
+                <a href="https://startupcity.hamburg/news-events/events/sustainability-summit-2026" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate Week NYC 2026 | Climate Group</div>
+                <div class="item-meta"><span class="meta-item">🌐 theclimategroup.org</span></div>
+                <div class="item-description">Every year, we bring together heads of state, global business leaders, philanthropic leaders, and civil society to accelerate climate action at scale. 2025 marked our biggest year yet: More than 100,000 participants, 5,500 leaders from business ...</div>
+                <a href="https://www.theclimategroup.org/our-work/events/climate-week-nyc-2026" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">SF Climate Week</div>
+                <div class="item-meta"><span class="meta-item">🌐 sfclimateweek.org</span></div>
+                <div class="item-description">SF Climate Week — San Francisco's annual gathering for climate action, innovation, and community. April 18–26, 2026.</div>
+                <a href="https://www.sfclimateweek.org/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">DC Climate Week | April 20-26, 2026</div>
+                <div class="item-meta"><span class="meta-item">🌐 dcclimateweek.com</span></div>
+                <div class="item-description">Together, we will explore the challenges of the climate crisis and discover the solutions that give us hope. Whether you’re deep in the work or just getting started, let’s build a community that drives climate action April 20-26, 2026.</div>
+                <a href="https://www.dcclimateweek.com/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Annual Resilience symposium 2026: Resilience Research... - YouTube</div>
+                <div class="item-meta"><span class="meta-item">🌐 youtube.com</span></div>
+                <div class="item-description">2026 Resilience Symposium | Building Strength for a Changing WorldThe 2026 Resilience Symposium brought together thought leaders, practitioners, and change-m...</div>
+                <a href="https://www.youtube.com/watch?v=WOi4RN6Vc3E" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2026 Data Driven Resilience Symposium — ASC Illinois</div>
+                <div class="item-meta"><span class="meta-item">🌐 ascuiuc.com</span></div>
+                <div class="item-description">The Spring Symposium 2026: Data Driven Resilience – The Future of Insurance, hosted by the Actuarial Science Club at the University of Illinois Urbana-Champaign, is a premier event...</div>
+                <a href="https://www.ascuiuc.com/2026-data-driven-resilience-symposium" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">How Can Cities Build Resilience to Flooding and... — Tech Square ATL</div>
+                <div class="item-meta"><span class="meta-item">🌐 techsquareatl.com</span></div>
+                <div class="item-description">Read more about the presenters in CURA’s 2026 Urban Resilience Leadership Symposium summary. Expert Reflections on the Role of Cities in Climate Resilience.</div>
+                <a href="https://www.techsquareatl.com/tech-square-news/2026/4/28/how-can-cities-build-resilience-to-flooding-and-drought-experts-distilled-insights-at-curas-2026-symposium" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Environmental Conferences in USA 2026/2027/2028 - Conference ...</div>
+                <div class="item-meta"><span class="meta-item">🌐 conferenceindex.org</span></div>
+                <div class="item-description">Environmental Conferences in USA 2026 2027 2028 is for the researchers, scientists, scholars, engineers, academic, scientific and university practitioners to present research activities that might want to attend events, meetings, seminars, congresses, workshops, summit, and symposiums.</div>
+                <a href="https://conferenceindex.org/conferences/environmental/united-states" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">ENSURE-2027 | Environmental Sustainability Conference</div>
+                <div class="item-meta"><span class="meta-item">🌐 ensure.unitedscientificgroup.org</span></div>
+                <div class="item-description">ENSURE–2027 brings together innovators, industry leaders, researchers, and changemakers to explore smarter ways of managing resources and building a sustainable future. Now in its 5 th edition, the conference creates a dynamic space where connections lead to collaboration, ideas transform into real-world solutions, and innovation drives impact.</div>
+                <a href="https://ensure.unitedscientificgroup.org/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2026/2027 Best Upcoming Environmental Sciences Conferences ...</div>
+                <div class="item-meta"><span class="meta-item">🌐 research.com</span></div>
+                <div class="item-description">Find the latest information about new and upcoming Environmental Sciences conferences and compare 2400+ international, national and regional conferences across 24 science disciplines</div>
+                <a href="https://research.com/upcoming-conferences/environmental-sciences" class="item-link">Read Full Article →</a>
+            </div>
+</div>
+        <div class="section" id="reports">
+            <div class="section-header">
+                <h2 class="section-title">📊 ESG & Sustainability Reports</h2>
+                <p class="section-subtitle">Latest corporate sustainability disclosures and environmental impact assessments</p>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Sustainable Development Report 2025</div>
+                <div class="item-meta"><span class="meta-item">🌐 sdgtransformationcenter.org</span></div>
+                <div class="item-description">The Sustainable Development Report (SDR) reviews progress made each year on the SDGs since their adoption by all UN Member States in 2015.</div>
+                <a href="https://sdgtransformationcenter.org/reports/sustainable-development-report-2025" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Implenia Sustainability as construction and real estate company</div>
+                <div class="item-meta"><span class="meta-item">🌐 implenia.com</span></div>
+                <div class="item-description">Sustainability is an integral part of everything Implenia does. Because only as a sustainable company vis-à-vis the environment, society and the economy are we fit for the future.</div>
+                <a href="https://implenia.com/en/sustainability/sustainability-report-2022/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Starbucks Global Impact Report Fiscal 2024</div>
+                <div class="item-meta"><span class="meta-item">🌐 about.starbucks.com</span></div>
+                <div class="item-description">Starbucks Global · Impact Report · Fiscal 2024 · PARTNERS COFFEE COMMUNITY ENVIRONMENT</div>
+                <a href="https://about.starbucks.com/uploads/2025/05/Starbucks-Fiscal-2024-Global-Impact-Report.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2025 Global Impact Report | Deloitte Global</div>
+                <div class="item-meta"><span class="meta-item">🌐 deloitte.com</span></div>
+                <div class="item-description">2025 Global Impact Report (7 MB PDF) 2025 Performance Metrics and Reporting Frameworks (2 MB PDF) FY2025 Global Environmental Performance Summary (2 MB PDF) Over the past year, we have helped Deloitte clients, our people, and society navigate ...</div>
+                <a href="https://www.deloitte.com/global/en/about/governance/global-impact-report.html" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Achieving Consistent and Comparable Climate-related Disclosures: 2024 Progress report - Financial Stability Board</div>
+                <div class="item-meta"><span class="meta-item">🌐 fsb.org</span></div>
+                <div class="item-description">December 2, 2024 - This report describes progress made over the past year by FSB member jurisdictions, standard-setters and international organisations towards achieving globally consistent and comparable climate-related disclosures.</div>
+                <a href="https://www.fsb.org/2024/11/achieving-consistent-and-comparable-climate-related-disclosures-2024-progress-report/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Reports and data | Thon</div>
+                <div class="item-meta"><span class="meta-item">🌐 thon.no</span></div>
+                <div class="item-description">Here you can read reports and the basis for our sustainability efforts. You will find everything from sustainability reports to ethical requirements for suppliers. Sustainability report 2024.</div>
+                <a href="https://thon.no/en/social-responsibility/sustainability/reports-and-data/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">sustainability report of Anglo America plc | PDF</div>
+                <div class="item-meta"><span class="meta-item">🌐 slideshare.net</span></div>
+                <div class="item-description">The 2023 Sustainability Report outlines the company's goals for sustainability, including cutting greenhouse gas emissions by 30% by 2030 and achieving carbon neutrality by 2040...</div>
+                <a href="https://www.slideshare.net/slideshow/sustainability-report-of-anglo-america-plc/267685642" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">How to Generate an AASB S2 Climate Disclosure Report | Carbonly.ai</div>
+                <div class="item-meta"><span class="meta-item">🌐 carbonly.ai</span></div>
+                <div class="item-description">A Group 1 reporter we spoke with last month told us their AASB S2 climate disclosure took more time to assemble than their entire annual financial report. Not because the numbers were...</div>
+                <a href="https://carbonly.ai/blog/aasb-s2-climate-disclosure-report-generation" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Key Implications of SEC’s Climate-Related Disclosure Rules</div>
+                <div class="item-meta"><span class="meta-item">🌐 corpgov.law.harvard.edu</span></div>
+                <div class="item-description">For many companies, the Final Rules will constitute only one of several disclosure frameworks under which they must report climate-related information.</div>
+                <a href="https://corpgov.law.harvard.edu/2024/04/01/key-implications-of-secs-climate-related-disclosure-rules/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Brundtland Report: Our common future</div>
+                <div class="item-meta"><span class="meta-item">🌐 are.admin.ch</span></div>
+                <div class="item-description">The Brundtland Report stated that critical global environmental problems were primarily the result of the enormous poverty of the South and the non-sustainable patterns of consumption and...</div>
+                <a href="https://www.are.admin.ch/en/1987-brundtland-report" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Environmental Impact Report Pdf</div>
+                <div class="item-meta"><span class="meta-item">🌐 in.pinterest.com</span></div>
+                <div class="item-description">Discover Pinterest’s best ideas and inspiration for Environmental impact report pdf. Be inspired and try out new things. Last updated 6d.</div>
+                <a href="https://in.pinterest.com/ideas/environmental-impact-report-pdf/919431373584/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">What the SEC Climate Disclosure Means for Your Organization</div>
+                <div class="item-meta"><span class="meta-item">🌐 nzero.com</span></div>
+                <div class="item-description">SEC Climate Disclosure Report. The SEC’s initial focus will be on big accelerated filers, which are publicly listed companies with a market cap of more than $700 million.</div>
+                <a href="https://nzero.com/blog/sec-emission-climate-disclosure/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">You've done the climate disclosure work, now make it work for you.</div>
+                <div class="item-meta"><span class="meta-item">🌐 linkedin.com</span></div>
+                <div class="item-description">Climate disclosure reporting is fast becoming standard practice, driven by tightening regulations and increased demand for transparency.</div>
+                <a href="https://www.linkedin.com/pulse/youve-done-climate-disclosure-work-now-make-you-insight-creative-kct3c" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">EY Releases Fifth Edition of Corporate Climate Disclosure Report</div>
+                <div class="item-meta"><span class="meta-item">🌐 todayesg.com</span></div>
+                <div class="item-description">This report is also the fifth edition of the climate risk disclosure report released by EY. Ernst & Young believes that the focus of climate information disclosure in the past decade has...</div>
+                <a href="https://www.todayesg.com/ey-corporate-climate-disclosure-report/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2025 Environmental Report</div>
+                <div class="item-meta"><span class="meta-item">🌐 sustainability.google</span></div>
+                <div class="item-description">Google’s 2025 Environmental Report provides an overview of our environmental sustainability strategy, including our ambitions and annual progress towards them. This report centers on the core themes of energy, AI, and resilience, and features information from our 2024 fiscal year (January 1 to December 31, 2024) along with some notable achievements from the first half of 2025. Download PDFGet insights with AIJune 2025</div>
+                <a href="https://sustainability.google/reports/google-2025-environmental-report/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Annual Sustainability Report 2024-2025 - Harvard Office for Sustainability</div>
+                <div class="item-meta"><span class="meta-item">📅 January 29, 2026</span><span class="meta-item">🌐 sustainable.harvard.edu</span></div>
+                <div class="item-description">January 29, 2026 - Harvard Financial Administration posts the Annual Financial Report. Learn more about the Office of Community and Campus Life. The Office for Institutional Research & Analytics produces the Harvard Fact Book, which presents a wide range of data regarding the University’s organization, people, and resources. View snapshots of past Annual Sustainability Reports:</div>
+                <a href="https://sustainable.harvard.edu/data-and-sustainability-progress/annual-sustainability-report-2024-2025/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2025 Sustainability Report</div>
+                <div class="item-meta"><span class="meta-item">🌐 sustainability.atmeta.com</span></div>
+                <div class="item-description">September 15, 2025 - Understanding our impacts on the environment and society is core to how Meta operates. Download our sustainability report to learn more about our progress.</div>
+                <a href="https://sustainability.atmeta.com/wp-content/uploads/2025/08/Meta_2025-Sustainability-Report.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">ESG DISCLOSURE REPORT 2023</div>
+                <div class="item-meta"><span class="meta-item">🌐 unepfi.org</span></div>
+                <div class="item-description">November 13, 2024 - practices and Environmental, Social and Governance ("ESG") principles. This report</div>
+                <a href="https://www.unepfi.org/wordpress/wp-content/uploads/2024/11/ESG-Disclosure-Report-2023.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">ESG REPORT | 2024-25</div>
+                <div class="item-meta"><span class="meta-item">🌐 infosys.com</span></div>
+                <div class="item-description">"The company’s ESG roadmap for 2030 reflects its continued aspiration to be a well-governed model organization for diverse talent with an inclusive workplace and community strategies to leverage technology for good"</div>
+                <a href="https://www.infosys.com/sustainability/documents/infosys-esg-report-2024-25.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">(PDF) ESG Metrics and Reporting: Best Practices for Companies</div>
+                <div class="item-meta"><span class="meta-item">🌐 researchgate.net</span></div>
+                <div class="item-description">July 8, 2025 - PDF | Environmental, Social, and Governance (ESG) metrics have emerged as a critical benchmark for evaluating a company's commitment to sustainable and... | Find, read and cite all the research you need on ResearchGate</div>
+                <a href="https://www.researchgate.net/publication/393475896_ESG_Metrics_and_Reporting_Best_Practices_for_Companies" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate disclosure on the rise - 2024 Climate Disclosure Report</div>
+                <div class="item-meta"><span class="meta-item">🌐 lexology.com</span></div>
+                <div class="item-description">The report alleges that this climate cartel “forces companies to disclose their carbon emissions, reduce their carbon emissions, and enforce their disclosure and reduction commitments...</div>
+                <a href="https://www.lexology.com/library/detail.aspx?g=39decd0c-9e55-4fe8-9aa0-70eb9b9dc498" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Disclosure Reports — Creative Climate Disclosure</div>
+                <div class="item-meta"><span class="meta-item">🌐 creativesforclimate.org</span></div>
+                <div class="item-description">RR Climate Disclosure Report (Master)[2].jpg. rubber republic. We are creative strategists, filmmakers and change creators, who believe in the power of entertainment to build a...</div>
+                <a href="https://www.creativesforclimate.org/disclosurereports" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate disclosure at a crossroads: 2025 climate disclosure report</div>
+                <div class="item-meta"><span class="meta-item">🌐 torys.com</span></div>
+                <div class="item-description">Our annual report examines the climate disclosure practices of over 200 of Canada’s largest public companies.</div>
+                <a href="https://www.torys.com/our-latest-thinking/publications/2025/2025-climate-disclosure-report" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Disclosing climate risks and opportunities: What... | The Carbon Trust</div>
+                <div class="item-meta"><span class="meta-item">🌐 carbontrust.com</span></div>
+                <div class="item-description">Mandatory climate-related financial disclosures in annual reports and accounts have been introduced in the UK public sector.</div>
+                <a href="https://www.carbontrust.com/news-and-insights/insights/disclosing-climate-risks-and-opportunities-what-could-mandatory-reporting-mean-for-the-public-sector" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Sustainable Development Report 2025</div>
+                <div class="item-meta"><span class="meta-item">🌐 dashboards.sdgindex.org</span></div>
+                <div class="item-description">The Sustainable Development Report 2025 tracks the performance of all 193 UN Member States on the 17 Sustainable Development Goals.</div>
+                <a href="https://dashboards.sdgindex.org/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Sustainability</div>
+                <div class="item-meta"><span class="meta-item">🌐 14521241.fs1.hubspotusercontent-na1.net</span></div>
+                <div class="item-description">Sustainability Report 2022 9. Our Main Values. Positioned among the top five most valuable food brands in Italy in the Food & Drink sector 1 in 2022, Amadori has always promoted and...</div>
+                <a href="https://14521241.fs1.hubspotusercontent-na1.net/hubfs/14521241/Amadori+2022/Report_Sostenibilità/Amadori_sustainability_report_ENG_2022.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">UN World Commission on Environment and Development, ed., Report...</div>
+                <div class="item-meta"><span class="meta-item">🌐 environmentandsociety.org</span></div>
+                <div class="item-description">In 1987 the UN’s World Commission for Environment and Development publishes the report “Our Common Future,” also known as the “Brundtland Report.”</div>
+                <a href="https://www.environmentandsociety.org/mml/un-world-commission-environment-and-development-ed-report-world-commission-environment-and" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Find and save ideas about environmental impact report pdf on Pinterest.</div>
+                <div class="item-meta"><span class="meta-item">🌐 uk.pinterest.com</span></div>
+                <div class="item-description">2020 Sustainability Goals Report. Sustainable Development Report.Environment Class 5 Notes Pdf. Environmental Science Pdf.</div>
+                <a href="https://uk.pinterest.com/ideas/environmental-impact-report-pdf/919431373584/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">ESG (Environmental, Social, & Governance)</div>
+                <div class="item-meta"><span class="meta-item">🌐 corporatefinanceinstitute.com</span></div>
+                <div class="item-description">ESG is an acronym for Environmental, Social, and Governance. ESG takes the holistic view that sustainability extends beyond just environmental issues.</div>
+                <a href="https://corporatefinanceinstitute.com/resources/esg/esg-environmental-social-governance/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Gannett Publishes Inaugural Environmental, Social... - ESG News</div>
+                <div class="item-meta"><span class="meta-item">🌐 esgnews.com</span></div>
+                <div class="item-description">Gannett Co., Inc. today published its inaugural 2022 environmental, social and governance report detailing the alignment of its efforts.</div>
+                <a href="https://esgnews.com/gannett-publishes-inaugural-environmental-social-governance-report/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Task Force on Climate-Related Financial Disclosures | TCFD)</div>
+                <div class="item-meta"><span class="meta-item">🌐 fsb-tcfd.org</span></div>
+                <div class="item-description">December 4, 2023 - Since the launch of the TCFD’s recommendations report in 2017, nearly 5,000 organizations publicly declared their support for the TCFD’s recommendations. Support indicated that an organization believes the TCFD recommendations provide a useful framework to increase transparency on climate-related risks and opportunities within financial markets. ... "The work done by the Task Force on Climate-related Financial Disclosures helps drive consistent, voluntary disclosures by companies that can significantly enhance investor understanding of climate-related business risks and opportunities.</div>
+                <a href="https://www.fsb-tcfd.org/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">SEC Rule to End Biden-Era Climate Policy Sent to White House</div>
+                <div class="item-meta"><span class="meta-item">🌐 insurancejournal.com</span></div>
+                <div class="item-description">4 days ago - It required companies to report material risks to their business due to a changing climate, as well as carbon emissions for some firms. Read more: SEC Ends Defense of Climate Disclosure Rules in Litigation</div>
+                <a href="https://www.insurancejournal.com/news/national/2026/05/06/868733.htm" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Climate-Related Financial Risks and Opportunities | US EPA</div>
+                <div class="item-meta"><span class="meta-item">📅 January 29, 2026</span><span class="meta-item">🌐 epa.gov</span></div>
+                <div class="item-description">January 29, 2026 - Steps to discover, assess, report, and manage climate risks and opportunities. Market developments around climate-related financial disclosures.</div>
+                <a href="https://www.epa.gov/climateleadership/climate-related-financial-risks-and-opportunities" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">SB 253 and SB 261: California climate reporting explained</div>
+                <div class="item-meta"><span class="meta-item">📅 March 26, 2026</span><span class="meta-item">🌐 pwc.com</span></div>
+                <div class="item-description">March 26, 2026 - SB 253 requires scope 1, scope 2, and scope 3 greenhouse gas emissions reporting in conformance with the GHG Protocol, with an initial reporting deadline of August 10, 2026. SB 261 requires climate-related financial risk disclosures aligned with TCFD or equivalent frameworks, though timing ...</div>
+                <a href="https://www.pwc.com/us/en/ghosts/california-climate-reporting-sb-253-and-sb-261-explained.html" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Sustainability Report 2025 - ExxonMobil</div>
+                <div class="item-meta"><span class="meta-item">🌐 corporate.exxonmobil.com</span></div>
+                <div class="item-description">ExxonMobil | 2025 Sustainability Report 4 Caring for land and biodiversityReducing potential impacts on ecosystems and protecting the value they provide to nature and people. Conserving water resourcesSafeguarding water resources by prudently managing and monitoring our water use – with a focus on the quality and supply of freshwater.</div>
+                <a href="https://corporate.exxonmobil.com/-/media/global/files/sustainability-report/2024/sustainability-report.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Sustainability Report</div>
+                <div class="item-meta"><span class="meta-item">🌐 assets.new.siemens.com</span></div>
+                <div class="item-description">The company commits to sustainability by pioneering breakthroughs to make health-care accessible and affordable for patients everywhere, driving a decarbonized and circular value chain, and devel-oping its diverse workforce, engaging them in creating greater business and societal impact together also with their strategic partners.</div>
+                <a href="https://assets.new.siemens.com/siemens/assets/api/uuid:32a7154d-edba-47bc-8e9b-9761617ba774/sustainability-report.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">2025 SUSTAINABILITY REPORT WE’RE DRIVING SUSTAINABILITY</div>
+                <div class="item-meta"><span class="meta-item">🌐 sustainability.wm.com</span></div>
+                <div class="item-description">This Sustainability Report details annual progress on our sustainability initiatives and our 2030 sustainability goals; available as a PDF The Sustainability Data Center displays data on</div>
+                <a href="https://sustainability.wm.com/downloads/WM_2025_Sustainability_Report.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">download : Sustainability : Hitachi Global</div>
+                <div class="item-meta"><span class="meta-item">🌐 hitachi.com</span></div>
+                <div class="item-description">Click here to download Hitachi Sustainability Report 2025, an annual report on Hitachi's sustainability initiatives.</div>
+                <a href="https://www.hitachi.com/en/sustainability/download/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Measuring Our Social Responsibility — Simpson Strong-Tie and ESG...</div>
+                <div class="item-meta"><span class="meta-item">🌐 blog.strongtie.com</span></div>
+                <div class="item-description">What Is an ESG Report? “ESG” is shorthand for the environmental, social and governance aspects of a company’s behavior, and has become a common term to describe the long-range...</div>
+                <a href="https://blog.strongtie.com/measuring-social-responsibility-simpson-strong-tie-esg-values/" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">ESG Report Orcan Energy - en</div>
+                <div class="item-meta"><span class="meta-item">🌐 orcan.energy</span></div>
+                <div class="item-description">Orcan Energy publishes its first-ever ESG Report. The two new Article 9 Funds backing Orcan Energy in 2022 have already been a testament to the sustainability of the company.</div>
+                <a href="https://orcan.energy/en/details/esg-report-orcan-energy.html" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Pfizer_Impact_Report_ 2024</div>
+                <div class="item-meta"><span class="meta-item">🌐 cdn.pfizer.com</span></div>
+                <div class="item-description">2024 Impact Report On behalf of the Board of Directors, thank you for your interest in Pfizer. The company's commitment to its Purpose—Breakthroughs that change patients' lives—is important for its long-term value creation and dedication to a responsible and resilient patient-centric business model. This model acts as the foundation for serving patients and communities with innovation and ...</div>
+                <a href="https://cdn.pfizer.com/pfizercom/Pfizer_2024_Impact_Report_02JUN2025.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">CNE Impact Report 2025</div>
+                <div class="item-meta"><span class="meta-item">🌐 thecne.org</span></div>
+                <div class="item-description">This impact report tells the story of what’s possible when we act with courage, lead with care, and partner with purpose. You’ll read about emerging leaders stepping into their power, boards transforming themselves to reflect the communities they serve, and funders investing in long-term sustainability.</div>
+                <a href="https://thecne.org/wp-content/uploads/2025/07/CNE-Impact-Report-2025.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Bayer Impact Report 2024</div>
+                <div class="item-meta"><span class="meta-item">🌐 bayer.com</span></div>
+                <div class="item-description">The reporting period for this Impact Report is the 2024 fiscal year. The closing date for all data and facts was December 31, 2024. The Bayer Group’s sustainability reporting has been aligned to the guidelines of the Global Reporting Initiative (GRI) and the 10 principles of the UN Global Compact (UNGC) since 2000.</div>
+                <a href="https://www.bayer.com/sites/default/files/2025-03/bayer-impact-report-2024.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">COPHX 2024 2522 CAPReport FullBook C7</div>
+                <div class="item-meta"><span class="meta-item">🌐 phoenix.gov</span></div>
+                <div class="item-description">CITY OF PHOENIX 2024 CLIMATE ACTION PLAN PROGRESS REPORT 7 • CDP Reporting • Phoenix Greenhouse Gas Emission Trends CDP REPORTING CDP is a global leader in city reporting on climate and environment, providing an accountability framework. In 2022, Phoenix made the A-list for climate and environmental efforts and retained the A-List rating in ...</div>
+                <a href="https://www.phoenix.gov/content/dam/phoenix/oepsite/documents/cophx_2024_2522_capreport_fullbook_c7.4.pdf" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">SEC Climate Disclosure Guidance | Deloitte US</div>
+                <div class="item-meta"><span class="meta-item">🌐 deloitte.com</span></div>
+                <div class="item-description">This Heads Up spotlights key provisions of the SEC’s March 6, 2024 climate disclosure ruling requiring comprehensive climate-related reporting from registrants.</div>
+                <a href="https://www.deloitte.com/us/en/services/audit-assurance/articles/sec-climate-disclosure-guidance.html" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">SEC Adopts Rules to Enhance and Standardize Climate-Related ...</div>
+                <div class="item-meta"><span class="meta-item">🌐 sec.gov</span></div>
+                <div class="item-description">The Securities and Exchange Commission today adopted rules to enhance and standardize climate-related disclosures by public companies and in public offerings. The final rules reflect the Commission’s efforts to respond to investors’ demand for more consistent, comparable, and reliable information about the financial effects of climate-related risks on a registrant’s operations and how it ...</div>
+                <a href="https://www.sec.gov/newsroom/press-releases/2024-31" class="item-link">Read Full Article →</a>
+            </div>
+
+            <div class="item-card">
+                <div class="item-title">Regulatory Climate Shift: Updates on the SEC Climate-Related ...</div>
+                <div class="item-meta"><span class="meta-item">🌐 corpgov.law.harvard.edu</span></div>
+                <div class="item-description">Sep 30, 2025 · Conclusion While climate-related risk and emissions disclosure requirements continue to advance on the state and international levels, the future of the SEC’s climate-related risk disclosure rules remains uncertain, and, at least under the current Commission, unlikely to move forward.</div>
+                <a href="https://corpgov.law.harvard.edu/2025/09/30/regulatory-climate-shift-updates-on-the-sec-climate-related-disclosure-rules/" class="item-link">Read Full Article →</a>
+            </div>
+</div>
+        <div class="footer">
+            <div style="font-size: 48px; margin-bottom: 20px;">🌍</div>
+            <h3
+                style="font-family: 'FK Screamer', Arial, sans-serif; font-size: 28px; font-weight: 900; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 2px;">
+                CLIMATE CARDINALS</h3>
+            <p
+                style="font-family: 'Athletics', Arial, sans-serif; font-size: 15px; opacity: 0.9; margin: 0 0 20px 0; font-weight: 600;">
+                Complete Weekly Intelligence Report</p>
+            <div style="width: 60px; height: 3px; background: #ffffff; margin: 20px auto;"></div>
+            <p style="font-family: 'Athletics', Arial, sans-serif; font-size: 12px; opacity: 0.7; margin: 12px 0 0 0;">©
+                2026 Climate Cardinals • Generated on May 11, 2026</p>
+        </div>
+    </div>
+    
+    <!-- Back to top button -->
+    <button class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Back to top">↑</button>
+    
+    <script>
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+        
+        // Initially hide the button
+        document.querySelector('.back-to-top').style.display = 'none';
+        
+        // Read More/Show Less functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section');
+            
+            sections.forEach(section => {
+                // Get all cards in this section (both expert-card and item-card)
+                const cards = section.querySelectorAll('.expert-card, .item-card');
+                
+                // Only add toggle functionality if there are more than 3 cards
+                if (cards.length > 3) {
+                    // Hide cards after the first 3
+                    cards.forEach((card, index) => {
+                        if (index >= 3) {
+                            card.classList.add('item-hidden');
+                        }
+                    });
+                    
+                    // Create toggle button
+                    const toggleBtn = document.createElement('button');
+                    toggleBtn.className = 'toggle-btn';
+                    toggleBtn.textContent = `Read More (${cards.length - 3} more)`;
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                    toggleBtn.setAttribute('aria-label', `Show ${cards.length - 3} more items`);
+                    
+                    // Add click handler
+                    let isExpanded = false;
+                    toggleBtn.addEventListener('click', function() {
+                        isExpanded = !isExpanded;
+                        
+                        cards.forEach((card, index) => {
+                            if (index >= 3) {
+                                if (isExpanded) {
+                                    card.classList.remove('item-hidden');
+                                } else {
+                                    card.classList.add('item-hidden');
+                                }
+                            }
+                        });
+                        
+                        // Update button text and accessibility
+                        if (isExpanded) {
+                            toggleBtn.textContent = 'Show Less';
+                            toggleBtn.setAttribute('aria-expanded', 'true');
+                            toggleBtn.setAttribute('aria-label', 'Show fewer items');
+                        } else {
+                            toggleBtn.textContent = `Read More (${cards.length - 3} more)`;
+                            toggleBtn.setAttribute('aria-expanded', 'false');
+                            toggleBtn.setAttribute('aria-label', `Show ${cards.length - 3} more items`);
+                            
+                            // Scroll to section header when collapsing
+                            const sectionHeader = section.querySelector('.section-header');
+                            if (sectionHeader) {
+                                sectionHeader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }
+                    });
+                    
+                    // Append button to section
+                    section.appendChild(toggleBtn);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
